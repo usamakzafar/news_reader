@@ -7,11 +7,16 @@
 
 
     <string name="dummy_title">This is the News Story Title</string>
-    <string name="dummy_points">240 points</string>
-    <string name="dummy_author">by John Smith</string>
+    <string name="dummy_points">240 </string>
+    <string name="dummy_author">John Smith</string>
     <string name="dummy_time">1 hour ago</string>
-    <string name="dummy_comments">123 comments</string>
+    <string name="dummy_comments">123</string>
     <string name="json_exception_message">Failed to parse the HTTP Response</string>
     <string name="interrupted_exception_message">An error occured while trying to fetch News Story Data</string>
-    <string name="up_to_date_message">Stories are up to date</string>
+    <string name="up_to_date_message">List is up to date</string>
+    <string name="menu_about">About</string>
+    <string name="my_message">Hello PropertyGuru! \n\nI\'ve made this app in the most native way possible, using only basic Java and Android methods.
+        No Library is being used for making the REST API calls. This is the most basic that it can get. Usually I would like to use helping
+        libraries like GSON and Volley for handling these REST calls and their JSON response.
+        Anyhow, it has been a good revision of my skills. Hope to hear from you soon! \n\nUsama K. Zafar</string>
 </resources>

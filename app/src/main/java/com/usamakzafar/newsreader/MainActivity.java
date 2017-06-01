@@ -1,34 +1,28 @@
 package com.usamakzafar.newsreader;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.usamakzafar.newsreader.helpers.Adapters.NewsStoryAdapter;
-import com.usamakzafar.newsreader.helpers.NewsStory;
+import com.usamakzafar.newsreader.helpers.Objects.NewsStory;
 import com.usamakzafar.newsreader.helpers.NewsStoryMethods;
-import com.usamakzafar.newsreader.helpers.ParseJSON;
-import com.usamakzafar.newsreader.helpers.RestGetter;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
@@ -53,6 +47,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle(getString(R.string.app_name));
+
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
@@ -71,6 +69,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(dividerItemDecoration);
+
+
+        new FetchNewsStories().execute();
 
         //On Scroll Listener to detect whether the ser has scrolled to the bottom of the list.
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -88,48 +91,33 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 }
             }
         });
-
-
-
-        try {
-            //Fetch the new News Story IDs
-            newsIDList = NewsStoryMethods.getTopNewsStoriesID(this);
-
-            //Fetch the News Stories
-            new FetchNewsStories().execute();
-
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            Toast.makeText(MainActivity.this, R.string.interrupted_exception_message, Toast.LENGTH_LONG).show();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            Toast.makeText(MainActivity.this, R.string.interrupted_exception_message, Toast.LENGTH_LONG).show();
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Toast.makeText(MainActivity.this, R.string.json_exception_message, Toast.LENGTH_LONG).show();
-        }
-
     }
 
     @Override
     public void onRefresh() {
-        try {
-            //Fetch the Updated List of stories
-            newsIDList = NewsStoryMethods.getTopNewsStoriesID(MainActivity.this);
+        //if Recycler View is not already loading data
+        if (!isRecyclerViewLoading)     //Execute Fetch
+            new FetchNewsStories().execute();
+    }
 
-            //Check if the list is already up to date
-            if (isUpToDate())
-                Toast.makeText(this, R.string.up_to_date_message, Toast.LENGTH_SHORT).show();
-            else
-                new FetchNewsStories().execute();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_about:
+                AlertDialog.Builder builder= new AlertDialog.Builder(this);
+                builder.setMessage(R.string.my_message);
+                builder.setPositiveButton("Okay",null);
+                builder.show();
+                break;
         }
-
+        return super.onOptionsItemSelected(item);
     }
 
     //Method to increase number of Loaded stories (initially 20)
@@ -148,31 +136,42 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     //News Story Fetch in Background Method
     public class FetchNewsStories extends AsyncTask<Void,Void,Void>{
 
+        private boolean isUpToDate;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             isRecyclerViewLoading = true;
+            isUpToDate = false;
         }
 
         @Override
         protected Void doInBackground(Void... params) {
 
             try {
+                //Fetch the Updated List of stories
+                newsIDList = NewsStoryMethods.getTopNewsStoriesID(MainActivity.this);
 
-                Log.i(TAG, "Received IDs in ArrayList: " + newsIDList.size());
+                //Check if the list is already up to date or if its a request for more news stories
+                if (!isUpToDate() || moreRequired()){
 
-                //Check to see if this is a request for more stories to be loaded or to refresh the list
-                if (!moreRequired())
-                    newsStories = new ArrayList<>();
+                    //Update the ID of the Latest Story fetched
+                    latestStoryID = newsIDList.get(0);
 
-                for (int i = newsStories.size(); i < currentCount; i++) {
-                    NewsStory story = NewsStoryMethods.getNewsStoryContent(MainActivity.this, newsIDList.get(i));
-                    if(story != null) {
-                        newsStories.add(story);
-                        publishProgress();
+                    Log.i(TAG, "Received IDs in ArrayList: " + newsIDList.size());
+
+                    //Check to see if this is a request for more stories to be loaded or to refresh the list
+                    if (!moreRequired())
+                        newsStories = new ArrayList<>();
+
+                    for (int i = newsStories.size(); i < currentCount; i++) {
+                        NewsStory story = NewsStoryMethods.getNewsStoryContent(MainActivity.this, newsIDList.get(i));
+                        if (story != null) {
+                            newsStories.add(story);
+                            publishProgress();
+                        }
                     }
                 }
-
+                else { isUpToDate = true;}
             }catch (ExecutionException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
@@ -197,6 +196,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             isRecyclerViewLoading = false;
             swipeRefreshLayout.setRefreshing(false);
             mAdapter.notifyDataSetChanged();
+            if (isUpToDate)
+                Toast.makeText(MainActivity.this, getString(R.string.up_to_date_message), Toast.LENGTH_SHORT).show();
         }
     }
 

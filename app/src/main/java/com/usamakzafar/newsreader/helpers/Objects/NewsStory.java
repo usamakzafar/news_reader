@@ -1,4 +1,4 @@
-package com.usamakzafar.newsreader.helpers;
+package com.usamakzafar.newsreader.helpers.Objects;
 
 import org.json.JSONArray;
 

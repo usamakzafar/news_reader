@@ -1,12 +1,6 @@
 package com.usamakzafar.newsreader.helpers;
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
-
-import com.usamakzafar.newsreader.R;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,19 +13,17 @@ import java.net.URL;
  * Created by usamazafar on 01/06/2017.
  */
 
-public class RestGetter extends AsyncTask<String,Void,String> {
-    private String TAG = RestGetter.class.getSimpleName();
+public class HTTPRestCall {
 
-    public RestGetter(){ }
+    public static String makeCall(String callURL){
 
-    @Override
-    protected String doInBackground(String... params) {
+        String TAG = "AsyncTaskGetNewsContent";
 
-        Log.i(TAG, "Beginning Call on URL: " + params[0]);
+        Log.i(TAG, "Beginning Call on URL: " + callURL);
         // String sURL = context.getResources().getString(R.string.RestURL)+ params[0] + ".json";
 
         try {
-            URL url = new URL(params[0]);
+            URL url = new URL(callURL);
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -58,4 +50,5 @@ public class RestGetter extends AsyncTask<String,Void,String> {
         }
         return null;
     }
+
 }

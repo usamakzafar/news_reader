@@ -10,7 +10,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.usamakzafar.newsreader.R;
-import com.usamakzafar.newsreader.helpers.NewsStory;
+import com.usamakzafar.newsreader.helpers.Objects.NewsStory;
 import com.usamakzafar.newsreader.helpers.NewsStoryMethods;
 
 import java.text.SimpleDateFormat;
@@ -49,7 +49,7 @@ public class NewsStoryAdapter extends RecyclerView.Adapter<NewsStoryAdapter.News
     @Override
     public NewsStoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.news_list_item, parent, false);
+                .inflate(R.layout.news_list_item_fancy, parent, false);
 
         return new NewsStoryViewHolder(itemView);
     }
@@ -59,14 +59,9 @@ public class NewsStoryAdapter extends RecyclerView.Adapter<NewsStoryAdapter.News
         try {
             NewsStory story = newsStories.get(position);
             holder.title.setText(story.getTitle());
-            holder.author.setText("by " + story.getAuthor());
-
-            holder.score.setText(       String.valueOf(story.getScore()) + " points");
-            holder.comments.setText(    String.valueOf(story.getDescendants()) + " comments");
-
-            SimpleDateFormat format = new SimpleDateFormat("EEEE, MMMM d, yyyy 'at' h:mm a");
-            String times = format.format(story.getTime().getTime());
-            //holder.time.setText(times);
+            holder.author.setText(story.getAuthor());
+            holder.score.setText(       String.valueOf(story.getScore()));
+            holder.comments.setText(    String.valueOf(story.getDescendants()));
             holder.time.setText(NewsStoryMethods.parseDate(story.getTime()));
 
 
