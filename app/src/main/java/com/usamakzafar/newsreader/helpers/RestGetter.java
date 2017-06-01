@@ -2,6 +2,7 @@ package com.usamakzafar.newsreader.helpers;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -19,10 +20,12 @@ import java.net.URL;
  */
 
 public class RestGetter extends AsyncTask<String,Void,String> {
-
+    private String TAG = RestGetter.class.getSimpleName();
     private Context context;
     private ProgressBar progressBar;
 
+    public RestGetter(){
+    }
     public RestGetter(Context c, ProgressBar p){
         this.context = c;
         this.progressBar = p;
@@ -38,11 +41,11 @@ public class RestGetter extends AsyncTask<String,Void,String> {
     @Override
     protected String doInBackground(String... params) {
 
-        String sURL = context.getResources().getString(R.string.RestURL)
-                + params[0] + ".json";
+        Log.i(TAG, "Beginning Call on URL: " + params[0]);
+        // String sURL = context.getResources().getString(R.string.RestURL)+ params[0] + ".json";
 
         try {
-            URL url = new URL(sURL);
+            URL url = new URL(params[0]);
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -59,6 +62,7 @@ public class RestGetter extends AsyncTask<String,Void,String> {
                 data = reader.read();
             }
 
+            Log.i(TAG, "Returning String: " + result);
             return result;
 
         } catch (MalformedURLException e) {

@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">News Reader</string>
+
+    <string name="RestTopStoriesURL">https://hacker-news.firebaseio.com/v0/topstories.json</string>
     <string name="RestURL">https://hacker-news.firebaseio.com/v0/item/</string>
+
+
+
+    <string name="dummy_title">This is the News Story Title</string>
+    <string name="dummy_points">240 points</string>
+    <string name="dummy_author">by John Smith</string>
+    <string name="dummy_time">1 hour ago</string>
+    <string name="dummy_comments">123 comments</string>
 </resources>
