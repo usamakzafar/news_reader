@@ -21,22 +21,8 @@ import java.net.URL;
 
 public class RestGetter extends AsyncTask<String,Void,String> {
     private String TAG = RestGetter.class.getSimpleName();
-    private Context context;
-    private ProgressBar progressBar;
 
-    public RestGetter(){
-    }
-    public RestGetter(Context c, ProgressBar p){
-        this.context = c;
-        this.progressBar = p;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        if (progressBar != null)
-            progressBar.setVisibility(View.VISIBLE);
-    }
+    public RestGetter(){ }
 
     @Override
     protected String doInBackground(String... params) {
@@ -71,12 +57,5 @@ public class RestGetter extends AsyncTask<String,Void,String> {
             e.printStackTrace();
         }
         return null;
-    }
-
-    @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
-        if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
     }
 }

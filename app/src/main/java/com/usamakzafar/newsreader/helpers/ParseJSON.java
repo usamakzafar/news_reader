@@ -1,5 +1,7 @@
 package com.usamakzafar.newsreader.helpers;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,7 +27,7 @@ public class ParseJSON {
     private static String KEY_COMMENT_TEXT ="text";
 
 
-    public NewsStory parseNewsStory(String s){
+    public static NewsStory parseNewsStory(String s){
         //Pass in the JSON Object as a String
 
         try {
@@ -33,16 +35,17 @@ public class ParseJSON {
             JSONObject object = new JSONObject(s);
             Calendar calendar = Calendar.getInstance();
 
+            //TODO: IF SOMETHING SKIPS IN ANY OF THE ELEMENTS, THE WHOLE ELEMENT IS LOST
             //If successful, create a new NewsStory using the elements of the JSON object
             NewsStory story = new NewsStory();
-            story.setId(          object.getInt(KEY_ID) );
-            story.setScore(       object.getInt(KEY_SCORE) );
-            story.setDescendants( object.getInt(KEY_DESCENDANTS) );
+            story.setId(          object.getInt(KEY_ID)             );
+            story.setScore(       object.getInt(KEY_SCORE)          );
+            story.setDescendants( object.getInt(KEY_DESCENDANTS)    );
 
-            story.setAuthor(      object.getString(KEY_AUTHOR) );
-            story.setType(        object.getString(KEY_TYPE) );
-            story.setTitle(       object.getString(KEY_TITLE) );
-            story.setUrl(         object.getString(KEY_URL) );
+            story.setAuthor(      object.getString(KEY_AUTHOR)      );
+            story.setType(        object.getString(KEY_TYPE)        );
+            story.setTitle(       object.getString(KEY_TITLE)       );
+            story.setUrl(         object.getString(KEY_URL)         );
 
             //Parse the time
             calendar.setTimeInMillis(object.getLong(KEY_TIME) * 1000L);
@@ -63,7 +66,7 @@ public class ParseJSON {
 
     }
 
-    public JSONObject parseComments(String s){
+    public static JSONObject parseComments(String s){
         //Pass in the JSON Object as a String
 
         try {

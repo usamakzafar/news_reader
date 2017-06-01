@@ -11,4 +11,7 @@
     <string name="dummy_author">by John Smith</string>
     <string name="dummy_time">1 hour ago</string>
     <string name="dummy_comments">123 comments</string>
+    <string name="json_exception_message">Failed to parse the HTTP Response</string>
+    <string name="interrupted_exception_message">An error occured while trying to fetch News Story Data</string>
+    <string name="up_to_date_message">Stories are up to date</string>
 </resources>
