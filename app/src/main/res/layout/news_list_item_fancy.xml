@@ -28,7 +28,7 @@
             <TextView
                 android:id="@+id/tv_author"
                 android:text="@string/dummy_author"
-                style="@style/news_list_subtext"/>
+                style="@style/list_item_subtext"/>
         </LinearLayout>
 
         <LinearLayout
@@ -42,7 +42,7 @@
             <TextView
                 android:id="@+id/tv_score"
                 android:text="@string/dummy_points"
-                style="@style/news_list_subtext"/>
+                style="@style/list_item_subtext"/>
         </LinearLayout>
 
         <LinearLayout
@@ -56,7 +56,7 @@
             <TextView
                 android:id="@+id/tv_time"
                 android:text="@string/dummy_time"
-                style="@style/news_list_subtext" />
+                style="@style/list_item_subtext" />
         </LinearLayout>
 
         <LinearLayout
@@ -70,7 +70,7 @@
             <TextView
                 android:id="@+id/tv_comments"
                 android:text="@string/dummy_comments"
-                style="@style/news_list_subtext" />
+                style="@style/list_item_subtext" />
         </LinearLayout>
     </LinearLayout>
 

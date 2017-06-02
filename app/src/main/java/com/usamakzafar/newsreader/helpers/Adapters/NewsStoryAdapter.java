@@ -8,13 +8,11 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.usamakzafar.newsreader.R;
 import com.usamakzafar.newsreader.helpers.Objects.NewsStory;
-import com.usamakzafar.newsreader.helpers.NewsStoryMethods;
+import com.usamakzafar.newsreader.helpers.HelpingMethods;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
@@ -63,7 +61,7 @@ public class NewsStoryAdapter extends RecyclerView.Adapter<NewsStoryAdapter.News
             holder.author.setText(story.getAuthor());
             holder.score.setText(       String.valueOf(story.getScore()));
             holder.comments.setText(    String.valueOf(story.getDescendants()));
-            holder.time.setText(NewsStoryMethods.parseDate(story.getTime()));
+            holder.time.setText(HelpingMethods.parseDate(story.getTime()));
 
             setAnimation(holder.itemView, position);
         }catch (Exception e) {e.printStackTrace();}

@@ -17,4 +17,10 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         style="@style/Widget.MyApp.Toolbar.Solid"/>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_comments"
+        android:layout_below="@id/comments_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>

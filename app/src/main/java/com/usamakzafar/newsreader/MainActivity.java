@@ -15,17 +15,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
 import com.usamakzafar.newsreader.helpers.Adapters.NewsStoryAdapter;
 import com.usamakzafar.newsreader.helpers.Listener.RecyclerItemClickListener;
 import com.usamakzafar.newsreader.helpers.Objects.NewsStory;
-import com.usamakzafar.newsreader.helpers.NewsStoryMethods;
+import com.usamakzafar.newsreader.helpers.HelpingMethods;
+import com.usamakzafar.newsreader.helpers.ParseJSON;
 
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -98,12 +99,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 //Get Selected News Story
                 NewsStory selectedNewsStory = newsStories.get(position);
 
-                //Check if the News Story has any comments
+                //Check if the News Story has any replies
                 if (selectedNewsStory.getKids().length() > 0 && selectedNewsStory.getDescendants() >0) {
 
-                    //Make Intent
+                    //Make Intent for Comments Activity
                     Intent intent = new Intent(MainActivity.this, CommentsActivity.class);
-                    intent.putExtra("title", selectedNewsStory.getTitle());
+                    intent.putExtra("text", selectedNewsStory.getTitle());
                     intent.putExtra("kids", selectedNewsStory.getKids().toString());
 
                     //Start Intent with a little animation
@@ -154,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         protected Void doInBackground(Void... params) {
             try {
                 //Fetch the Updated List of stories
-                newsIDList = NewsStoryMethods.getTopNewsStoriesID(MainActivity.this);
+                newsIDList = HelpingMethods.getTopNewsStoriesID(MainActivity.this);
 
                 if (newsIDList == null) {
                     errorMessage = "No Internet Connection";
@@ -175,7 +176,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                         //Loop through the new stories IDs and fetch one by one
                         for (int i = newsStories.size(); i < currentCount; i++) {
 
-                            NewsStory story = NewsStoryMethods.getNewsStoryContent(MainActivity.this, newsIDList.get(i));
+                            // Step 1: Prepare GET URL
+                            String callURL = HelpingMethods.compileURL(MainActivity.this,newsIDList.get(i));
+
+                            // Step 2: Execute the HTTP Request on URL and store response in String Result
+                            String result = HelpingMethods.makeHTTPCall(callURL);
+
+                            // Step 3: Parse & Return the resulting NewsStory from the Result String
+                            NewsStory story = ParseJSON.parseNewsStory(result);
+
+                            //Step 4: Add the fetched story to the list
                             if (story != null) {
                                 newsStories.add(story);
                                 publishProgress();
@@ -187,12 +197,19 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     }
                 }
             }
+            // Catch the Exceptions
             catch (ExecutionException e) {
                 e.printStackTrace();
+                errorMessage = e.getLocalizedMessage();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                errorMessage = e.getLocalizedMessage();
             } catch (JSONException e) {
                 e.printStackTrace();
+                errorMessage = e.getLocalizedMessage();
+            } catch (IOException e) {
+                e.printStackTrace();
+                errorMessage = e.getLocalizedMessage();
             }
 
             return null;

@@ -17,6 +17,8 @@ public class Comment {
     private String text;
     private Calendar time;
     private String type;
+    private int level;
+    private boolean deleted;
 
     public Comment(){}
 
@@ -74,5 +76,21 @@ public class Comment {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }
