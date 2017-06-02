@@ -27,17 +27,17 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
     private Context context;
 
     public class CommentViewHolder extends RecyclerView.ViewHolder{
-        public TextView text,score,author, time, replies, space;
+        public TextView text,author, time, replies, space;
 
         public CommentViewHolder(View itemView) {
             super(itemView);
             time     = (TextView) itemView.findViewById(R.id.tv_time);
-            score    = (TextView) itemView.findViewById(R.id.tv_level);
             author   = (TextView) itemView.findViewById(R.id.tv_author);
             replies  = (TextView) itemView.findViewById(R.id.tv_replies);
             text     = (TextView) itemView.findViewById(R.id.tv_commentText);
             space    = (TextView) itemView.findViewById(R.id.space);
         }
+
         public void clearAnimation()
         {
             itemView.clearAnimation();
@@ -61,11 +61,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         try {
             Comment comment = comments.get(position);
 
-            //Set the necessary texts
-            holder.text.setText(Html.fromHtml(Html.fromHtml(comment.getText()).toString()));
+            // Populate the view
+            holder.text.setText(comment.getText());
             holder.text.setMaxLines(20);
             holder.author.setText(comment.getAuthor());
-            holder.score.setText(       String.valueOf(comment.getLevel()));
             holder.time.setText(HelpingMethods.parseDate(comment.getTime()));
 
             holder.replies.setText(   comment.getKids() != null ? String.valueOf(comment.getKids().length()) : "0");
@@ -73,14 +72,12 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
             // Set the space on the left to denote a reply thread
             String space = "";
             for(int i=0;i<comment.getLevel();i++)
-                space+= "   ";
+                space+= "     ";
             holder.space.setText(space);
 
             setAnimation(holder.itemView, position);
         }catch (Exception e) {e.printStackTrace();}
     }
-
-
 
     @Override
     public int getItemCount() {

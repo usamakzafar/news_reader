@@ -29,7 +29,7 @@
 
     <style name="news_list_icons">
         <item name="android:layout_width">15dp</item>
-        <item name="android:layout_height">15dp</item>
+        <item name="android:layout_height">match_parent</item>
     </style>
 
 

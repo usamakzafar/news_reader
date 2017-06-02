@@ -1,14 +1,14 @@
 package com.usamakzafar.newsreader.helpers.Listener;
 
-/**
- * Created by usamazafar on 02/06/2017.
- */
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+/**
+ * Created by usamazafar on 02/06/2017.
+ */
 
 public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
     private OnItemClickListener mListener;

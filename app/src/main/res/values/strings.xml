@@ -16,8 +16,9 @@
     <string name="menu_about">About</string>
     <string name="my_message">Hello PropertyGuru! \n\nI\'ve made this app in the most native way possible, using only basic Java and Android methods.
         No Library is being used for making the REST API calls. This is the most basic that I could have made it. Usually I would like
-        to use helping libraries like GSON and Volley for handling these REST calls and their JSON response.
-        Anyhow, it has been a good revision of my skills. Hope to hear from you soon! \n\nUsama K. Zafar</string>
+        to use helping libraries like GSON and Volley for handling these REST calls and their JSON response.\n\nAlso, although you said we can
+        display only one level of reply for simplicity, I have included a setting in the comments screen to let you choose how many replies you would like to view\n\nAnyhow, it has been a good revision of my skills. Hope to hear from you soon! \n
+        \nUsama K. Zafar</string>
     <string name="comment_activity_prefix">Comments from</string>
     <string name="comment_author_postfix">said</string>
     <string name="comment_placeholder">This is the comment placeholder, any remarks would be shown here</string>

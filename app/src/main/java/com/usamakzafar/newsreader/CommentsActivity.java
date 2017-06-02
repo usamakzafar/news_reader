@@ -1,6 +1,7 @@
 package com.usamakzafar.newsreader;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.usamakzafar.newsreader.helpers.Adapters.CommentsAdapter;
 import com.usamakzafar.newsreader.helpers.HelpingMethods;
+import com.usamakzafar.newsreader.helpers.Listener.RecyclerItemClickListener;
 import com.usamakzafar.newsreader.helpers.Objects.Comment;
 import com.usamakzafar.newsreader.helpers.Objects.NewsStory;
 import com.usamakzafar.newsreader.helpers.ParseJSON;
@@ -65,13 +67,13 @@ public class CommentsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.comments_toolbar);
         toolbar.setTitle(getString(R.string.comment_activity_prefix) + " " + getIntent().getStringExtra("text"));
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Load comment IDs into a JSON array
         loadCommentIDs(getIntent().getStringExtra("kids"));
 
         //If any error occurred
         if(commentIDs == null) {
-
             //Exit this activity
             onBackPressed();
 
@@ -79,6 +81,7 @@ public class CommentsActivity extends AppCompatActivity {
             loadComments();
         }
     }
+
 
     // Make a fresh Comment List and Put it to an adapter in the recycler view
     private void loadComments() {
@@ -99,10 +102,36 @@ public class CommentsActivity extends AppCompatActivity {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
 
+
+        //Implement on item Click Listener to view full comment
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+                //Get Selected News Story
+                Comment comment = commentsList.get(position);
+
+                //Open an Alert to show the full comment
+                AlertDialog.Builder commentDialog = new AlertDialog.Builder(CommentsActivity.this);
+                commentDialog.setTitle(HelpingMethods.parseDate(comment.getTime()) + " by " + comment.getAuthor());
+                commentDialog.setMessage(comment.getText());
+                commentDialog.setPositiveButton("Close",null);
+                commentDialog.show();
+
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
+
+
         // Load Comments
         new FetchComments().execute();
 
     }
+
 
     // Getting IDs in JSON Array Format from string
     private void loadCommentIDs(String kids) {
@@ -113,6 +142,7 @@ public class CommentsActivity extends AppCompatActivity {
             Toast.makeText(this, "Unable to Read Comments", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     // Method to fetch Comments/Replies
     public class FetchComments extends AsyncTask<Void,Void,Void>{
@@ -174,6 +204,8 @@ public class CommentsActivity extends AppCompatActivity {
         }
     }
 
+
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -211,7 +243,7 @@ public class CommentsActivity extends AppCompatActivity {
                         int entered = Integer.valueOf(num.getText().toString());
                         if (entered == 0 || entered >= 20) entered = 20;
                         maxLevel = entered;
-                        preferences.edit().putInt(KEY_MAXLEVEL,maxLevel);
+                        preferences.edit().putInt(KEY_MAXLEVEL,maxLevel).apply();
                         loadComments();
                     }
                 });
@@ -223,6 +255,10 @@ public class CommentsActivity extends AppCompatActivity {
                 builder.setMessage(R.string.my_message);
                 builder.setPositiveButton("Okay",null);
                 builder.show();
+                break;
+
+            case android.R.id.home:
+                onBackPressed();
                 break;
         }
         return super.onOptionsItemSelected(item);

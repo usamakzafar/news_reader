@@ -1,5 +1,6 @@
 package com.usamakzafar.newsreader.helpers;
 
+import android.text.Html;
 import android.util.Log;
 
 import com.usamakzafar.newsreader.helpers.Objects.Comment;
@@ -96,7 +97,9 @@ public class ParseJSON {
                 //Parse Strings
                 comment.setAuthor(parseString(object, KEY_AUTHOR));
                 comment.setType(parseString(object, KEY_TYPE));
-                comment.setText(parseString(object, KEY_COMMENT_TEXT));
+
+                // Comment Text is in HTML and Needs to be converted
+                comment.setText(Html.fromHtml(parseString(object, KEY_COMMENT_TEXT)).toString());
 
                 comment.setKids(parseKids(object, KEY_KIDS));
 

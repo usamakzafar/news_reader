@@ -35,6 +35,7 @@ public class NewsStoryAdapter extends RecyclerView.Adapter<NewsStoryAdapter.News
             comments = (TextView) itemView.findViewById(R.id.tv_comments);
             title    = (TextView) itemView.findViewById(R.id.tv_storyTitle);
         }
+
         public void clearAnimation()
         {
             itemView.clearAnimation();
