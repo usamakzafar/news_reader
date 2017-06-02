@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.usamakzafar.newsreader.R;
 import com.usamakzafar.newsreader.helpers.Objects.NewsStory;
@@ -63,7 +64,6 @@ public class NewsStoryAdapter extends RecyclerView.Adapter<NewsStoryAdapter.News
             holder.score.setText(       String.valueOf(story.getScore()));
             holder.comments.setText(    String.valueOf(story.getDescendants()));
             holder.time.setText(NewsStoryMethods.parseDate(story.getTime()));
-
 
             setAnimation(holder.itemView, position);
         }catch (Exception e) {e.printStackTrace();}

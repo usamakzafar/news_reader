@@ -28,18 +28,21 @@ public class NewsStoryMethods {
             throws ExecutionException, InterruptedException, JSONException {
 
         String s = HTTPRestCall.makeCall(context.getResources().getString(R.string.RestTopStoriesURL));
+        if (s !=null ) {
 
-        //Parse the News Stories IDs in JSON Array
-        JSONArray list = new JSONArray(s);
+            //Parse the News Stories IDs in JSON Array
+            JSONArray list = new JSONArray(s);
 
-        Log.i(TAG, "Adding " + list.length() +" IDs to Array List" );
+            Log.i(TAG, "Adding " + list.length() + " IDs to Array List");
 
-        ArrayList<Integer> newsIDList = new ArrayList<>();
-        // ADD Each ID to an Array List
-        for (int i=0; i< list.length(); i++){
-            newsIDList.add(list.getInt(i));
+            ArrayList<Integer> newsIDList = new ArrayList<>();
+            // ADD Each ID to an Array List
+            for (int i = 0; i < list.length(); i++) {
+                newsIDList.add(list.getInt(i));
+            }
+            return newsIDList;
         }
-        return newsIDList;
+        return null;
     }
 
 
