@@ -10,17 +10,27 @@
     <string name="dummy_author">John Smith</string>
     <string name="dummy_time">1 hour ago</string>
     <string name="dummy_comments">123</string>
+
     <string name="json_exception_message">Failed to parse the HTTP Response</string>
     <string name="interrupted_exception_message">An error occured while trying to fetch News Story Data</string>
     <string name="up_to_date_message">List is up to date</string>
+
+    <string name="comment_activity_prefix">Comments from</string>
+    <string name="comment_author_postfix">said</string>
+    <string name="comment_placeholder">This is the comment placeholder, any remarks would be shown here</string>
+
+    <string name="setting_reply_level">How many replies in a thread would you like to see? \n \[default = 2 | max = 20\]</string>
+
+    <string name="menu_reply">Set reply view level</string>
     <string name="menu_about">About</string>
+
     <string name="my_message">Hello PropertyGuru! \n\nI\'ve made this app in the most native way possible, using only basic Java and Android methods.
         No Library is being used for making the REST API calls. This is the most basic that I could have made it. Usually I would like
         to use helping libraries like GSON and Volley for handling these REST calls and their JSON response.\n\nAlso, although you said we can
         display only one level of reply for simplicity, I have included a setting in the comments screen to let you choose how many replies you would like to view\n\nAnyhow, it has been a good revision of my skills. Hope to hear from you soon! \n
         \nUsama K. Zafar</string>
-    <string name="comment_activity_prefix">Comments from</string>
-    <string name="comment_author_postfix">said</string>
-    <string name="comment_placeholder">This is the comment placeholder, any remarks would be shown here</string>
-    <string name="setting_reply_level">How many replies in a thread would you like to see? \n \[default = 2 | max = 20\]</string>
+
+
+    <string name="NewsStoryTest"></string>
+    <string name="CommentTest"></string>
 </resources>

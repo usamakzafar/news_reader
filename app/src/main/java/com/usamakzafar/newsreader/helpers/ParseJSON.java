@@ -33,13 +33,15 @@ public class ParseJSON {
     private static String KEY_COMMENT_TEXT ="text";
     private static String KEY_DELETED      ="deleted";
 
+
     //Method to format the received json string into a NewsStory Object
     public static NewsStory parseNewsStory(String s){
-        //Pass in the JSON Object as a String
 
-        //If successful, create a new NewsStory using the elements of the JSON object
+        //Create a new NewsStory using the elements of the JSON object
         NewsStory story = new NewsStory();
+
         try {
+
             //Try to create a new JSON Object from that String
             JSONObject object = new JSONObject(s);
 
@@ -55,7 +57,7 @@ public class ParseJSON {
             story.setUrl(        parseString(object, KEY_URL)    );
 
             //Parse JSON Array of Kids
-            story.setKids(      parseKids(object, KEY_KIDS) );
+            story.setKids(      parseKids(object) );
 
             //Parse the time
             Calendar calendar = Calendar.getInstance();
@@ -76,7 +78,8 @@ public class ParseJSON {
 
     }
 
-    //Method to format the received json string into a Comment Object
+
+    // Method to format the received json string into a Comment Object
     public static Comment parseComments(String s){
         //Pass in the JSON Object as a String
 
@@ -85,7 +88,7 @@ public class ParseJSON {
             JSONObject object = new JSONObject(s);
 
             // Check to see if the comment was deleted
-            if (!commentWasDeleted(object,KEY_DELETED)) {
+            if (!commentWasDeleted(object)) {
 
                 //If successful, create a new Comment using the elements of the JSON object
                 Comment comment = new Comment();
@@ -101,7 +104,7 @@ public class ParseJSON {
                 // Comment Text is in HTML and Needs to be converted
                 comment.setText(Html.fromHtml(parseString(object, KEY_COMMENT_TEXT)).toString());
 
-                comment.setKids(parseKids(object, KEY_KIDS));
+                comment.setKids(parseKids(object));
 
                 //Parse the time
                 Calendar calendar = Calendar.getInstance();
@@ -123,9 +126,12 @@ public class ParseJSON {
 
     }
 
-    private static boolean commentWasDeleted(JSONObject object, String keyDeleted) {
+
+    // Check is the comment was deleted.
+    // Only some comments have property "deleted"
+    private static boolean commentWasDeleted(JSONObject object) {
         try{
-            return object.getBoolean(keyDeleted);
+            return object.getBoolean(KEY_DELETED);
         } catch (JSONException e) { }
         return false;
     }
@@ -162,7 +168,7 @@ public class ParseJSON {
     // Private Method to extract
     //      JSON Array
     // from an Object and Handle Error
-    private static JSONArray parseKids(JSONObject object, String key){
+    private static JSONArray parseKids(JSONObject object){
         JSONArray array = new JSONArray();
         try {
             array = object.getJSONArray(KEY_KIDS);

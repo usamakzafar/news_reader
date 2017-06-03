@@ -1,7 +1,6 @@
 package com.usamakzafar.newsreader;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
@@ -24,7 +23,6 @@ import com.usamakzafar.newsreader.helpers.Adapters.CommentsAdapter;
 import com.usamakzafar.newsreader.helpers.HelpingMethods;
 import com.usamakzafar.newsreader.helpers.Listener.RecyclerItemClickListener;
 import com.usamakzafar.newsreader.helpers.Objects.Comment;
-import com.usamakzafar.newsreader.helpers.Objects.NewsStory;
 import com.usamakzafar.newsreader.helpers.ParseJSON;
 
 import org.json.JSONArray;
@@ -32,7 +30,6 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class CommentsActivity extends AppCompatActivity {
 
@@ -164,7 +161,7 @@ public class CommentsActivity extends AppCompatActivity {
                 try {
                     // Step 1: Prepare GET URL
                     int commentID = commentIDs.getInt(i);
-                    String callURL = HelpingMethods.compileURL(CommentsActivity.this, commentID);
+                    String callURL = HelpingMethods.compileURLforFetchingItems(CommentsActivity.this, commentID);
 
                     // Step 2: Execute the HTTP Request on URL and store response in String Result
                     String result = HelpingMethods.makeHTTPCall(callURL);

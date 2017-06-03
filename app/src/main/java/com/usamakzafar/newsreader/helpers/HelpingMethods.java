@@ -28,11 +28,9 @@ public class HelpingMethods {
     //Tag for logs
     private static String TAG = HelpingMethods.class.getSimpleName();
 
-    //Method to fetch the Top Stories IDs from Hacker News
-    public static ArrayList<Integer> getTopNewsStoriesID(Context context)
+    //Method to extract the Top Stories IDs from String received from Hacker News
+    public static ArrayList<Integer> getTopNewsStoriesID(String s)
             throws ExecutionException, InterruptedException, JSONException, IOException {
-
-        String s = makeHTTPCall(context.getResources().getString(R.string.RestTopStoriesURL));
         if (s !=null ) {
 
             //Parse the News Stories IDs in JSON Array
@@ -51,13 +49,13 @@ public class HelpingMethods {
     }
 
     // Prepare URL according to the ID
-    public static String compileURL(Context context, int id){
+    public static String compileURLforFetchingItems(Context context, int id){
         //Prepare GET URL
-        return context.getResources().getString(R.string.RestURL) + id + ".json";
+        return context.getString(R.string.RestURL) + id + ".json";
 
     }
 
-
+    // Method to make the HTTP Call
     public static String makeHTTPCall(String callURL) throws IOException {
 
         String TAG = "AsyncTaskGetNewsContent";
@@ -93,7 +91,6 @@ public class HelpingMethods {
     public static String parseDate(Calendar calendar){
         long now = System.currentTimeMillis();
         long then = calendar.getTimeInMillis();
-        long diff = now - then;
 
         return (String) DateUtils.getRelativeTimeSpanString(then,now,1);
     }

@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         swipeRefreshLayout.setOnRefreshListener(this);
 
         //to Bypass loading again in case orientation of the device has changed
-        if(newsStories ==null)
+        if(newsStories == null)
             newsStories = new ArrayList<>();
 
         //Initialize & set Adapter on the Recycler View
@@ -133,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         //Send Load request again
         new FetchNewsStories().execute();
 
-
         Log.i(TAG, "Request made for more news Stories, total count: " + currentCount);
     }
 
@@ -155,7 +154,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         protected Void doInBackground(Void... params) {
             try {
                 //Fetch the Updated List of stories
-                newsIDList = HelpingMethods.getTopNewsStoriesID(MainActivity.this);
+                String s = HelpingMethods.makeHTTPCall(getString(R.string.RestTopStoriesURL));
+                newsIDList = HelpingMethods.getTopNewsStoriesID(s);
 
                 if (newsIDList == null) {
                     errorMessage = "No Internet Connection";
@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                         for (int i = newsStories.size(); i < currentCount; i++) {
 
                             // Step 1: Prepare GET URL
-                            String callURL = HelpingMethods.compileURL(MainActivity.this,newsIDList.get(i));
+                            String callURL = HelpingMethods.compileURLforFetchingItems(MainActivity.this,newsIDList.get(i));
 
                             // Step 2: Execute the HTTP Request on URL and store response in String Result
                             String result = HelpingMethods.makeHTTPCall(callURL);
@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onRefresh() {
-        //if Recycler View is not already loading data
+        // Refresh the list if Recycler View is not already loading data
         if (!isRecyclerViewLoading)     //Execute Fetch
             new FetchNewsStories().execute();
     }
