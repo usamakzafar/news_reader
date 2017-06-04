@@ -1,7 +1,6 @@
 package com.usamakzafar.newsreader;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,19 +17,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.usamakzafar.newsreader.helpers.Adapters.NewsStoryAdapter;
-import com.usamakzafar.newsreader.helpers.Listener.RecyclerItemClickListener;
-import com.usamakzafar.newsreader.helpers.Objects.NewsStory;
-import com.usamakzafar.newsreader.helpers.HelpingMethods;
-import com.usamakzafar.newsreader.helpers.ParseJSON;
+import com.usamakzafar.newsreader.utils.adapters.NewsStoryAdapter;
+import com.usamakzafar.newsreader.utils.listener.RecyclerItemClickListener;
+import com.usamakzafar.newsreader.models.NewsStory;
+import com.usamakzafar.newsreader.utils.network.NewsStoryNetworkCalls;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
-public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, NewsStoryNetworkCalls.NewsStoriesUpdatedListener {
 
     private String TAG = MainActivity.class.getSimpleName();
 
@@ -44,15 +38,17 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     //Adapter for the Recycler View
     private NewsStoryAdapter mAdapter;
 
-    //Variables to keep track of the current display
-    private static int latestStoryID = 0;
+    //Variables to keep track of the currently displayed stories
     private static int currentCount = 20;
 
-    //Variables to store the fetched data
-    private static ArrayList<NewsStory> newsStories;
-    private static ArrayList<Integer> newsIDList;
+    // To keep record of how many stories can be loaded in total
+    private static int totalStoriesCount;
 
-    public static String errorMessage;
+    //Variables to store the fetched News Stories
+    private static ArrayList<NewsStory> newsStories;
+
+    // For making the network calls for news
+    private NewsStoryNetworkCalls storyNetworkCalls;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -120,140 +116,52 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         }));
 
         //Fetch News Stories
-        new FetchNewsStories().execute();
+        storyNetworkCalls = new NewsStoryNetworkCalls(this,currentCount,newsStories,this);
 
     }
 
     //Method to increase number of Loaded stories (initially 20)
     private void fetchMoreNewsStories() {
         //Increase the number of stories to load
-        if(currentCount+20 <= newsIDList.size())
+        if(currentCount+20 <= totalStoriesCount)
             currentCount += 20;
 
         //Send Load request again
-        new FetchNewsStories().execute();
+        storyNetworkCalls = new NewsStoryNetworkCalls(this,currentCount,newsStories,this);
 
         Log.i(TAG, "Request made for more news Stories, total count: " + currentCount);
     }
 
-    //News Story Fetch in Background Method
-    public class FetchNewsStories extends AsyncTask<Void,Void,Void>{
-
-        private boolean isUpToDate;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            isRecyclerViewLoading = true;
-            isUpToDate = false;
-            errorMessage = null;
-            swipeRefreshLayout.setRefreshing(true);
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                //Fetch the Updated List of stories
-                String s = HelpingMethods.makeHTTPCall(getString(R.string.RestTopStoriesURL));
-                newsIDList = HelpingMethods.getTopNewsStoriesID(s);
-
-                if (newsIDList == null) {
-                    errorMessage = "No Internet Connection";
-                }
-                else {
-                    //Check if the list is already up to date or if its a request for more news stories
-                    if (!isUpToDate() || moreRequired()) {
-
-                        //Update the ID of the Latest Story fetched
-                        latestStoryID = newsIDList.get(0);
-
-                        Log.i(TAG, "Received IDs in ArrayList: " + newsIDList.size());
-
-                        //Check to see if this is a request for more stories to be loaded or to refresh the list
-                        if (!moreRequired())
-                            newsStories = new ArrayList<>();
-
-                        //Loop through the new stories IDs and fetch one by one
-                        for (int i = newsStories.size(); i < currentCount; i++) {
-
-                            // Step 1: Prepare GET URL
-                            String callURL = HelpingMethods.compileURLforFetchingItems(MainActivity.this,newsIDList.get(i));
-
-                            // Step 2: Execute the HTTP Request on URL and store response in String Result
-                            String result = HelpingMethods.makeHTTPCall(callURL);
-
-                            // Step 3: Parse & Return the resulting NewsStory from the Result String
-                            NewsStory story = ParseJSON.parseNewsStory(result);
-
-                            //Step 4: Add the fetched story to the list
-                            if (story != null) {
-                                newsStories.add(story);
-                                publishProgress();
-                            }
-
-                        }
-                    } else {
-                        isUpToDate = true;
-                    }
-                }
-            }
-            // Catch the Exceptions
-            catch (ExecutionException e) {
-                e.printStackTrace();
-                errorMessage = e.getLocalizedMessage();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                errorMessage = e.getLocalizedMessage();
-            } catch (JSONException e) {
-                e.printStackTrace();
-                errorMessage = e.getLocalizedMessage();
-            } catch (IOException e) {
-                e.printStackTrace();
-                errorMessage = e.getLocalizedMessage();
-            }
-
-            return null;
-
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-            mAdapter.notifyDataSetChanged();
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            isRecyclerViewLoading = false;
-            swipeRefreshLayout.setRefreshing(false);
-            mAdapter.notifyDataSetChanged();
-
-            if (errorMessage != null)
-                Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-            else if (isUpToDate)
-                Toast.makeText(MainActivity.this, getString(R.string.up_to_date_message), Toast.LENGTH_SHORT).show();
-        }
+    @Override
+    public void beforeFetchingNewsStories() {
+        isRecyclerViewLoading = true;
+        swipeRefreshLayout.setRefreshing(true);
     }
 
-    //Method to check if the user has requested more stories to be loaded
-    private static boolean moreRequired() {
-        if (newsStories == null) return false;
-
-        return newsStories.size() < currentCount;
+    @Override
+    public void onProgressUpdated(ArrayList<NewsStory> arrayList) {
+        newsStories = arrayList;
+        mAdapter.notifyDataSetChanged();
     }
 
-    //Method to check if the current list is up to date
-    private static boolean isUpToDate() {
-        //Checking if the latest news story is already present
-        return newsIDList.get(0) == latestStoryID;
+    @Override
+    public void afterFetchingNewsStories(int totalCount, boolean isUpToDate, String errorMessage) {
+        totalStoriesCount = totalCount;
+
+        isRecyclerViewLoading = false;
+        swipeRefreshLayout.setRefreshing(false);
+
+        if (errorMessage != null)
+            Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+        else if (isUpToDate)
+            Toast.makeText(MainActivity.this, getString(R.string.up_to_date_message), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onRefresh() {
         // Refresh the list if Recycler View is not already loading data
         if (!isRecyclerViewLoading)     //Execute Fetch
-            new FetchNewsStories().execute();
+            storyNetworkCalls = new NewsStoryNetworkCalls(this,currentCount,newsStories,this);
     }
 
     @Override

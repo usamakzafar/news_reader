@@ -1,4 +1,4 @@
-package com.usamakzafar.newsreader.helpers;
+package com.usamakzafar.newsreader.utils;
 
 import android.content.Context;
 import android.text.format.DateUtils;
@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,8 +28,7 @@ public class HelpingMethods {
     private static String TAG = HelpingMethods.class.getSimpleName();
 
     //Method to extract the Top Stories IDs from String received from Hacker News
-    public static ArrayList<Integer> getTopNewsStoriesID(String s)
-            throws ExecutionException, InterruptedException, JSONException, IOException {
+    public static ArrayList<Integer> readNewsIDsFromString(String s) throws JSONException {
         if (s !=null ) {
 
             //Parse the News Stories IDs in JSON Array
@@ -53,38 +51,6 @@ public class HelpingMethods {
         //Prepare GET URL
         return context.getString(R.string.RestURL) + id + ".json";
 
-    }
-
-    // Method to make the HTTP Call
-    public static String makeHTTPCall(String callURL) throws IOException {
-
-        String TAG = "AsyncTaskGetNewsContent";
-
-        Log.i(TAG, "Beginning Call on URL: " + callURL);
-
-        // Get URL
-        URL url = new URL(callURL);
-
-        // Open HTTP Connection from URL
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-        // Get Input Stream
-        InputStream is = connection.getInputStream();
-
-        // Get Input Stream Reader
-        InputStreamReader reader = new InputStreamReader(is);
-
-        //Loop through all data in Input Stream and store in String
-        int data = reader.read();
-        String result = "";
-        while (data != -1) {
-            char c = (char) data;
-            result += c;
-            data = reader.read();
-        }
-
-        Log.i(TAG, "Returning String: " + result);
-        return result;
     }
 
     //Date parsing to to return time elapsed

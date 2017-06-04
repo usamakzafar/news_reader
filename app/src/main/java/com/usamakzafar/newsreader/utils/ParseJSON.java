@@ -1,10 +1,10 @@
-package com.usamakzafar.newsreader.helpers;
+package com.usamakzafar.newsreader.utils;
 
 import android.text.Html;
 import android.util.Log;
 
-import com.usamakzafar.newsreader.helpers.Objects.Comment;
-import com.usamakzafar.newsreader.helpers.Objects.NewsStory;
+import com.usamakzafar.newsreader.models.Comment;
+import com.usamakzafar.newsreader.models.NewsStory;
 
 import org.json.JSONArray;
 import org.json.JSONException;

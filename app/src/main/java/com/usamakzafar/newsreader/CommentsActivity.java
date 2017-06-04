@@ -2,7 +2,7 @@ package com.usamakzafar.newsreader;
 
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,19 +19,18 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.usamakzafar.newsreader.helpers.Adapters.CommentsAdapter;
-import com.usamakzafar.newsreader.helpers.HelpingMethods;
-import com.usamakzafar.newsreader.helpers.Listener.RecyclerItemClickListener;
-import com.usamakzafar.newsreader.helpers.Objects.Comment;
-import com.usamakzafar.newsreader.helpers.ParseJSON;
+import com.usamakzafar.newsreader.utils.adapters.CommentsAdapter;
+import com.usamakzafar.newsreader.utils.HelpingMethods;
+import com.usamakzafar.newsreader.utils.listener.RecyclerItemClickListener;
+import com.usamakzafar.newsreader.models.Comment;
+import com.usamakzafar.newsreader.utils.network.CommentsNetworkCalls;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-public class CommentsActivity extends AppCompatActivity {
+public class CommentsActivity extends AppCompatActivity implements CommentsNetworkCalls.CommentsUpdatedListener{
 
     // Recycler View
     private RecyclerView recyclerView;
@@ -44,27 +43,35 @@ public class CommentsActivity extends AppCompatActivity {
     private JSONArray commentIDs;
 
     // List of all Comments
-    private static ArrayList<Comment> commentsList;
+    private ArrayList<Comment> commentsList;
+
+    // For making the network calls for comments
+    private CommentsNetworkCalls commentsNetworkCalls;
 
     // Config Variable to store the required level number
     private int maxLevel;
     private SharedPreferences preferences;
     private String KEY_MAXLEVEL = "maxLevel";
 
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
-
-        // Get preferences for Max level configuration
-        preferences = getSharedPreferences("myPref",MODE_PRIVATE);
-        maxLevel = preferences.getInt(KEY_MAXLEVEL,2);
 
         //Setting the actionbar/toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.comments_toolbar);
         toolbar.setTitle(getString(R.string.comment_activity_prefix) + " " + getIntent().getStringExtra("text"));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //Setting swipe refresh layout only for loading
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+
+        // Get preferences for Max level configuration
+        preferences = getSharedPreferences("myPref",MODE_PRIVATE);
+        maxLevel = preferences.getInt(KEY_MAXLEVEL,2);
 
         // Load comment IDs into a JSON array
         loadCommentIDs(getIntent().getStringExtra("kids"));
@@ -75,13 +82,13 @@ public class CommentsActivity extends AppCompatActivity {
             onBackPressed();
 
         } else {
-            loadComments();
+            initActivity();
         }
     }
 
 
     // Make a fresh Comment List and Put it to an adapter in the recycler view
-    private void loadComments() {
+    private void initActivity() {
         commentsList = new ArrayList<>();
 
         //Initialize & set Adapter on the Recycler View
@@ -123,10 +130,10 @@ public class CommentsActivity extends AppCompatActivity {
             }
         }));
 
+        swipeRefreshLayout.setRefreshing(true);
 
         // Load Comments
-        new FetchComments().execute();
-
+        commentsNetworkCalls = new CommentsNetworkCalls(this,commentIDs,maxLevel,this);
     }
 
 
@@ -140,73 +147,18 @@ public class CommentsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onProgressUpdated(Comment comment) {
+        if(swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
 
-    // Method to fetch Comments/Replies
-    public class FetchComments extends AsyncTask<Void,Void,Void>{
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            getComments(commentIDs,0);
-
-            return null;
-        }
-
-        // Used as a separate method for nesting levels of replies
-        private void getComments(JSONArray commentIDs, int level) {
-
-            // Looping through this layer of replies
-            for (int i=0;i<commentIDs.length();i++){
-
-                try {
-                    // Step 1: Prepare GET URL
-                    int commentID = commentIDs.getInt(i);
-                    String callURL = HelpingMethods.compileURLforFetchingItems(CommentsActivity.this, commentID);
-
-                    // Step 2: Execute the HTTP Request on URL and store response in String Result
-                    String result = HelpingMethods.makeHTTPCall(callURL);
-
-                    // Step 3: Parse & Return the resulting Comment from the Result String
-                    Comment comment = ParseJSON.parseComments(result);
-
-                    if (comment != null) { // Deleted replies will return null
-
-                        // Step 4: Set Comment reply level
-                        comment.setLevel(level);
-
-                        //Step 5: Add the fetched story to the list
-                        commentsList.add(comment);
-                        publishProgress();
-
-                        // If this comment has further replies, load them
-                        if(comment.getKids() != null && level +1 < maxLevel){
-                            getComments(comment.getKids(), level + 1);
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-            mAdapter.notifyDataSetChanged();
-        }
+        commentsList.add(comment);
+        mAdapter.notifyDataSetChanged();
     }
-
-
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
+        commentsNetworkCalls.finishIt();
         //Reverse activity transition animation
         overridePendingTransition(R.anim.right_from_left_back,R.anim.left_from_right_back);
     }
@@ -241,7 +193,7 @@ public class CommentsActivity extends AppCompatActivity {
                         if (entered == 0 || entered >= 20) entered = 20;
                         maxLevel = entered;
                         preferences.edit().putInt(KEY_MAXLEVEL,maxLevel).apply();
-                        loadComments();
+                        initActivity();
                     }
                 });
                 settings.show();
@@ -260,5 +212,4 @@ public class CommentsActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

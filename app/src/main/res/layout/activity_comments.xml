@@ -17,10 +17,16 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         style="@style/Widget.MyApp.Toolbar.Solid"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview_comments"
+
+    <android.support.v4.widget.SwipeRefreshLayout
         android:layout_below="@id/comments_toolbar"
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_comments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

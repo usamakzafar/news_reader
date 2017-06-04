@@ -1,8 +1,7 @@
-package com.usamakzafar.newsreader.helpers.Adapters;
+package com.usamakzafar.newsreader.utils.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +10,10 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.usamakzafar.newsreader.R;
-import com.usamakzafar.newsreader.helpers.HelpingMethods;
-import com.usamakzafar.newsreader.helpers.Objects.Comment;
+import com.usamakzafar.newsreader.utils.HelpingMethods;
+import com.usamakzafar.newsreader.models.Comment;
 
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 /**
  * Created by usamazafar on 01/06/2017.
@@ -67,7 +65,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
             holder.author.setText(comment.getAuthor());
             holder.time.setText(HelpingMethods.parseDate(comment.getTime()));
 
-            holder.replies.setText(   comment.getKids() != null ? String.valueOf(comment.getKids().length()) : "0");
+            String numOfReplies = comment.getKids() != null ? String.valueOf(comment.getKids().length()) : "0";
+            holder.replies.setText( numOfReplies + " replies");
 
             // Set the space on the left to denote a reply thread
             String space = "";

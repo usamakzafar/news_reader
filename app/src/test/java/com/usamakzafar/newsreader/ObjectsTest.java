@@ -1,7 +1,7 @@
 package com.usamakzafar.newsreader;
 
 
-import com.usamakzafar.newsreader.helpers.ParseJSON;
+import com.usamakzafar.newsreader.utils.ParseJSON;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,8 +35,7 @@ public class ObjectsTest {
 
         String comment= "{\"by\":\"wallnuss\",\"id\":14467718,\"kids\":[14467781,14468256,14470479,14469443,14470448],\"parent\":14458955,\"text\":\"The only sad part of this story is the design was meant to celebrate John Conway and his Game of Life [1] (Conway actually was a lecturer at Cambridge, when he introduced GoL).<p>[1] From 2014: <a href=\\\"http:&#x2F;&#x2F;www.railwaygazette.com&#x2F;news&#x2F;infrastructure&#x2F;single-view&#x2F;view&#x2F;cambridge-science-park-station-to-incorporate-game-of-life.html\\\" rel=\\\"nofollow\\\">http:&#x2F;&#x2F;www.railwaygazette.com&#x2F;news&#x2F;infrastructure&#x2F;single-vie...</a>\",\"time\":1496381915,\"type\":\"comment\"}";
 
-
-/*
+        /*
         //  create mock
         Html test = mock(Html.class);
         Iterator<String> i= mock(Iterator.class);
@@ -48,7 +47,8 @@ public class ObjectsTest {
         assertEquals("wallnuss", ParseJSON.parseComments(comment).getAuthor() );
         assertEquals("comment",  ParseJSON.parseComments(comment).getType()   );
         assertEquals(14467718,   ParseJSON.parseComments(comment).getId()     );
-*/
+        */
+
     }
 
 }

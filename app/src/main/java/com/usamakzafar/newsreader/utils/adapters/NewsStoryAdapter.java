@@ -1,4 +1,4 @@
-package com.usamakzafar.newsreader.helpers.Adapters;
+package com.usamakzafar.newsreader.utils.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,8 +10,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.usamakzafar.newsreader.R;
-import com.usamakzafar.newsreader.helpers.Objects.NewsStory;
-import com.usamakzafar.newsreader.helpers.HelpingMethods;
+import com.usamakzafar.newsreader.models.NewsStory;
+import com.usamakzafar.newsreader.utils.HelpingMethods;
 
 import java.util.ArrayList;
 
