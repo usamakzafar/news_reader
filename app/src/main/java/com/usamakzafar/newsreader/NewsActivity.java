@@ -15,19 +15,19 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.usamakzafar.newsreader.utils.HelpingMethods;
-import com.usamakzafar.newsreader.utils.adapters.NewsStoryAdapter;
-import com.usamakzafar.newsreader.utils.listener.RecyclerItemClickListener;
+import com.usamakzafar.newsreader.adapters.NewsStoryAdapter;
+import com.usamakzafar.newsreader.listener.RecyclerItemClickListener;
 import com.usamakzafar.newsreader.models.NewsStory;
-import com.usamakzafar.newsreader.utils.network.NewsStoryNetworkCalls;
+import com.usamakzafar.newsreader.network.NewsStoryNetworkCalls;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, NewsStoryNetworkCalls.NewsStoriesUpdatedListener {
+public class NewsActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, NewsStoryNetworkCalls.NewsStoriesUpdatedListener {
 
-    private String TAG = MainActivity.class.getSimpleName();
+    private String TAG = NewsActivity.class.getSimpleName();
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private static int totalStoriesCount;
 
     //Variables to store the fetched News Stories
-    private static ArrayList<NewsStory> newsStories;
+    private static List<NewsStory> newsStories;
 
     // For making the network calls for news
     private NewsStoryNetworkCalls storyNetworkCalls;
@@ -67,6 +67,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         //Setting Listener on the Swipe Refresh Layout
         swipeRefreshLayout.setOnRefreshListener(this);
+
+        initActivity();
+    }
+
+    public void initActivity() {
 
         //to Bypass loading again in case orientation of the device has changed
         if(newsStories == null)
@@ -100,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 if (selectedNewsStory.getKids().length() > 0 && selectedNewsStory.getDescendants() >0) {
 
                     //Make Intent for Comments Activity
-                    Intent intent = new Intent(MainActivity.this, CommentsActivity.class);
+                    Intent intent = new Intent(NewsActivity.this, CommentsActivity.class);
                     intent.putExtra("text", selectedNewsStory.getTitle());
                     intent.putExtra("kids", selectedNewsStory.getKids().toString());
 
@@ -117,7 +122,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         }));
 
         //Fetch News Stories
-        storyNetworkCalls = new NewsStoryNetworkCalls(this,currentCount,newsStories,this);
+        storyNetworkCalls = new NewsStoryNetworkCalls(this, this);
+        storyNetworkCalls.execute(currentCount,newsStories);
 
     }
 
@@ -128,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             currentCount += 20;
 
         //Send Load request again
-        storyNetworkCalls = new NewsStoryNetworkCalls(this,currentCount,newsStories,this);
+        storyNetworkCalls.execute(currentCount,newsStories);
 
         Log.i(TAG, "Request made for more news Stories, total count: " + currentCount);
     }
@@ -140,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     @Override
-    public void onProgressUpdated(ArrayList<NewsStory> arrayList) {
+    public void onProgressUpdated(List<NewsStory> arrayList) {
         newsStories = arrayList;
         mAdapter.notifyDataSetChanged();
     }
@@ -153,16 +159,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         swipeRefreshLayout.setRefreshing(false);
 
         if (errorMessage != null)
-            HelpingMethods.showMessage(MainActivity.this, errorMessage);
+            HelpingMethods.showMessage(NewsActivity.this, errorMessage);
         else if (isUpToDate)
-            HelpingMethods.showMessage(MainActivity.this, getString(R.string.up_to_date_message));
+            HelpingMethods.showMessage(NewsActivity.this, getString(R.string.up_to_date_message));
     }
 
     @Override
     public void onRefresh() {
         // Refresh the list if Recycler View is not already loading data
         if (!isRecyclerViewLoading)     //Execute Fetch
-            storyNetworkCalls = new NewsStoryNetworkCalls(this,currentCount,newsStories,this);
+            storyNetworkCalls.execute(currentCount,newsStories);
     }
 
     @Override
@@ -195,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     if (lastVisibleItemPosition != RecyclerView.NO_POSITION && lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1) {
                         //If User has Scrolled to the bottom of the list, fetch more news stories
                         fetchMoreNewsStories();
-                        HelpingMethods.showMessage(MainActivity.this, "Loading more stories");
+                        HelpingMethods.showMessage(NewsActivity.this, "Loading more stories");
                     }
                 }
             }

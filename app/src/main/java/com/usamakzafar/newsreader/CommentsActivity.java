@@ -17,18 +17,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.usamakzafar.newsreader.utils.adapters.CommentsAdapter;
+import com.usamakzafar.newsreader.adapters.CommentsAdapter;
 import com.usamakzafar.newsreader.utils.HelpingMethods;
-import com.usamakzafar.newsreader.utils.listener.RecyclerItemClickListener;
+import com.usamakzafar.newsreader.listener.RecyclerItemClickListener;
 import com.usamakzafar.newsreader.models.Comment;
-import com.usamakzafar.newsreader.utils.network.CommentsNetworkCalls;
+import com.usamakzafar.newsreader.network.CommentsNetworkCalls;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CommentsActivity extends AppCompatActivity implements CommentsNetworkCalls.CommentsUpdatedListener{
 
@@ -43,7 +43,7 @@ public class CommentsActivity extends AppCompatActivity implements CommentsNetwo
     private JSONArray commentIDs;
 
     // List of all Comments
-    private ArrayList<Comment> commentsList;
+    private List<Comment> commentsList;
 
     // For making the network calls for comments
     private CommentsNetworkCalls commentsNetworkCalls;
@@ -133,7 +133,8 @@ public class CommentsActivity extends AppCompatActivity implements CommentsNetwo
         swipeRefreshLayout.setRefreshing(true);
 
         // Load Comments
-        commentsNetworkCalls = new CommentsNetworkCalls(this,commentIDs,maxLevel,this);
+        commentsNetworkCalls = new CommentsNetworkCalls(this,this);
+        commentsNetworkCalls.execute(commentIDs,maxLevel);
     }
 
 

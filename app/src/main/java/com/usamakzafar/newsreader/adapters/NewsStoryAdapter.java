@@ -1,4 +1,4 @@
-package com.usamakzafar.newsreader.utils.adapters;
+package com.usamakzafar.newsreader.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +14,7 @@ import com.usamakzafar.newsreader.models.NewsStory;
 import com.usamakzafar.newsreader.utils.HelpingMethods;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by usamazafar on 01/06/2017.
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 
 public class NewsStoryAdapter extends RecyclerView.Adapter<NewsStoryAdapter.NewsStoryViewHolder> {
 
-    private ArrayList<NewsStory> newsStories;
+    private List<NewsStory> newsStories;
     private Context context;
 
     public class NewsStoryViewHolder extends RecyclerView.ViewHolder{
@@ -42,7 +43,7 @@ public class NewsStoryAdapter extends RecyclerView.Adapter<NewsStoryAdapter.News
         }
     }
 
-    public NewsStoryAdapter(Context _context, ArrayList<NewsStory> _newsStories){
+    public NewsStoryAdapter(Context _context, List<NewsStory> _newsStories){
         this.newsStories = _newsStories; this.context = _context;
     }
 

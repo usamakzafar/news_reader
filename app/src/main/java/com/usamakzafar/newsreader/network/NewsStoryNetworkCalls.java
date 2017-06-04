@@ -1,4 +1,4 @@
-package com.usamakzafar.newsreader.utils.network;
+package com.usamakzafar.newsreader.network;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -13,7 +13,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
+import java.util.List;
 
 /**
  * Created by usamazafar on 04/06/2017.
@@ -31,19 +31,25 @@ public class NewsStoryNetworkCalls {
 
     private HTTPCallMethod httpCall;
 
-    public NewsStoryNetworkCalls(Context c, int _currentCount, ArrayList<NewsStory> _newsStories, NewsStoriesUpdatedListener storiesListener){
+    public NewsStoryNetworkCalls(Context c, NewsStoriesUpdatedListener storiesListener){
         context = c;
-        newsStories = _newsStories;
-        currentCount = _currentCount;
         listener = storiesListener;
-
         httpCall = new HTTPCallMethod();
+    }
 
-        new newsFetcher().execute();
-
+    public void execute( int currentCount, List<NewsStory> newsStories){
+        new newsFetcher(newsStories, currentCount).execute();
     }
 
     private class newsFetcher extends AsyncTask<Void,Void,Void> {
+
+        private final List<NewsStory> newsStories;
+        private final Integer currentCount;
+
+        public newsFetcher(List<NewsStory> newsStories, Integer currentCount) {
+            this.newsStories = newsStories;
+            this.currentCount = currentCount;
+        }
 
         private boolean isUpToDate;
 
@@ -141,7 +147,7 @@ public class NewsStoryNetworkCalls {
 
     public interface NewsStoriesUpdatedListener {
         void beforeFetchingNewsStories();
-        void onProgressUpdated(ArrayList<NewsStory> arrayList);
+        void onProgressUpdated(List<NewsStory> arrayList);
         void afterFetchingNewsStories(int totalCount, boolean isUpToDate, String error);
     }
 }

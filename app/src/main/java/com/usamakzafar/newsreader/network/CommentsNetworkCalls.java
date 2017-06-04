@@ -1,4 +1,4 @@
-package com.usamakzafar.newsreader.utils.network;
+package com.usamakzafar.newsreader.network;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -26,13 +26,17 @@ public class CommentsNetworkCalls {
 
     private HTTPCallMethod httpCall;
 
-    public CommentsNetworkCalls(Context c, JSONArray _commentIDs, int maxLevelOfReplies, CommentsUpdatedListener commentsUpdatedListener){
+    public CommentsNetworkCalls(Context c, CommentsUpdatedListener commentsUpdatedListener){
         context = c;
-        commentIDs = _commentIDs;
-        maxLevel = maxLevelOfReplies;
         listener = commentsUpdatedListener;
 
         httpCall = new HTTPCallMethod();
+
+    }
+
+    public void execute(JSONArray _commentIDs, int maxLevelOfReplies){
+        commentIDs = _commentIDs;
+        maxLevel = maxLevelOfReplies;
 
         fetcher = new commentsFetcher();
         fetcher.execute();

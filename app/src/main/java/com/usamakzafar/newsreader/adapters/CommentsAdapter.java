@@ -1,4 +1,4 @@
-package com.usamakzafar.newsreader.utils.adapters;
+package com.usamakzafar.newsreader.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +14,7 @@ import com.usamakzafar.newsreader.utils.HelpingMethods;
 import com.usamakzafar.newsreader.models.Comment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by usamazafar on 01/06/2017.
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.CommentViewHolder> {
 
-    private ArrayList<Comment> comments;
+    private List<Comment> comments;
     private Context context;
 
     public class CommentViewHolder extends RecyclerView.ViewHolder{
@@ -42,7 +43,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         }
     }
 
-    public CommentsAdapter(Context _context, ArrayList<Comment> _comments){
+    public CommentsAdapter(Context _context, List<Comment> _comments){
         this.comments = _comments; this.context = _context;
     }
 

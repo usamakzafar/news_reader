@@ -1,4 +1,4 @@
-package com.usamakzafar.newsreader.utils.listener;
+package com.usamakzafar.newsreader.listener;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

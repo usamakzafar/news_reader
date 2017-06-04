@@ -1,4 +1,4 @@
-package com.usamakzafar.newsreader.utils.network;
+package com.usamakzafar.newsreader.network;
 
 import android.util.Log;
 
