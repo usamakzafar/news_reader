@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.usamakzafar.newsreader.utils.HelpingMethods;
 import com.usamakzafar.newsreader.utils.adapters.NewsStoryAdapter;
 import com.usamakzafar.newsreader.utils.listener.RecyclerItemClickListener;
 import com.usamakzafar.newsreader.models.NewsStory;
@@ -152,9 +153,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         swipeRefreshLayout.setRefreshing(false);
 
         if (errorMessage != null)
-            Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            HelpingMethods.showMessage(MainActivity.this, errorMessage);
         else if (isUpToDate)
-            Toast.makeText(MainActivity.this, getString(R.string.up_to_date_message), Toast.LENGTH_SHORT).show();
+            HelpingMethods.showMessage(MainActivity.this, getString(R.string.up_to_date_message));
     }
 
     @Override
@@ -194,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     if (lastVisibleItemPosition != RecyclerView.NO_POSITION && lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1) {
                         //If User has Scrolled to the bottom of the list, fetch more news stories
                         fetchMoreNewsStories();
-                        Toast.makeText(MainActivity.this, "Loading more stories", Toast.LENGTH_SHORT).show();
+                        HelpingMethods.showMessage(MainActivity.this, "Loading more stories");
                     }
                 }
             }
