@@ -61,19 +61,23 @@ public class CommentsActivityInstrumentedTest {
         tester.checkIfRecyclerViewIsPopulated();
     }
 
+    @Test
+    public void test_c_verify_correct_data_present_in_recycler_view(){
+        tester.checkIfRecyclerViewExists();
+        tester.checkIfRecyclerViewIsPopulated();
+        tester.checkifTheFirstChildIsPresent();
+        tester.checkTheDataInTheFirstChild();
+    }
+
+    @Test
+    public void test_d_check_if_actionbar_is_present(){
+        tester.checkIfActionBarExists();
+    }
+
+    @Test
+    public void test_e_check_if_actionbar_shows_correct_title(){
+        tester.checkIfActionBarExists();
+        tester.checkIfActionbarShowsCorrectTitle();
+    }
 
 }
-/*
-        tester.test_if_recycler_view_is_populated();
-        tester.test_if_recycler_view_is_not_null();
-
-
-        1. check if actionbar not null
-        2. verify if recycler view exists
-        3. verify if recycler is populated with dummy data
-        4. verify if recycler view's first child exhibits correct data
-        5. verify activity title shown
-        6. verify is clicking a row transitions to comments activity
-
-
-         */

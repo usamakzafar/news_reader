@@ -46,6 +46,7 @@ public class NewsStoryInstrumentationTest {
         tester.checkIfRecyclerViewExists();
         tester.checkIfRecyclerViewIsPopulated();
     }
+
     @Test
     public void test_c_check_activity_transition(){
         tester.checkIfRecyclerViewExists();
@@ -55,6 +56,26 @@ public class NewsStoryInstrumentationTest {
         tester.verifyIfCorrectValuesWerePassedToTheNewActivity();
     }
 
+    @Test
+    public void test_d_check_if_actionbar_is_present(){
+        tester.checkIfActionBarExists();
+    }
 
+    @Test
+    public void test_e_check_if_actionbar_shows_correct_title(){
+        tester.checkIfActionBarExists();
+        tester.checkIfActionbarShowsCorrectTitle();
+    }
+
+    @Test
+    public void test_f_scroll_to_bottom(){
+        tester.checkScrollingToBottom();
+    }
+
+    @Test
+    public void test_f_check_if_more_stories_are_loaded_on_scroll(){
+        tester.checkScrollingToBottom();
+        tester.checkIfMoreLoaded();
+    }
 
 }

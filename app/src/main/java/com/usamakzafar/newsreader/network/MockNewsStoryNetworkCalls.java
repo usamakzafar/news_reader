@@ -22,7 +22,7 @@ class MockNewsStoryNetworkCalls extends NewsStoryNetworkCalls {
 
     @Override
     public void execute( int currentCount, List<NewsStory> newsStories){
-        for(int i=1;i<=10;i++){
+        for(int i=1;i<=20;i++){
 
             //Dummy news stories for testing
             NewsStory n = new NewsStory();

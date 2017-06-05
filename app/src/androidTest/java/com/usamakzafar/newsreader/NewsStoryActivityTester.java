@@ -15,7 +15,10 @@ import junit.framework.Assert;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.swipeUp;
+import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static com.usamakzafar.newsreader.RecyclerViewMatcher.withRecyclerView;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -72,5 +75,28 @@ class NewsStoryActivityTester {
         String title = commentsActivity.getIntent().getStringExtra("title");
 
         assertEquals("Title 1",title);
+    }
+
+    public void checkIfActionBarExists() {
+        assertNotNull(activity.getSupportActionBar());
+    }
+
+    public void checkIfActionbarShowsCorrectTitle() {
+        String title = activity.getSupportActionBar().getTitle().toString();
+        assertNotNull(title);
+        assertEquals("News Reader", title);
+    }
+
+    public void checkScrollingToBottom() {
+        int bottomPos= 19;
+        onView(withId(R.id.recyclerview)).perform(scrollToPosition(bottomPos));
+        onView(withId(R.id.recyclerview)).perform(swipeUp());
+    }
+
+    public void checkIfMoreLoaded() {
+        RecyclerView recyclerView = (RecyclerView) activity.findViewById(R.id.recyclerview);
+        int loadedCount = recyclerView.getAdapter().getItemCount();
+
+        assertTrue(loadedCount > 20);
     }
 }
