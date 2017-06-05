@@ -1,6 +1,8 @@
 package com.usamakzafar.newsreader.network;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -14,6 +16,8 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.usamakzafar.newsreader.utils.HelpingMethods.haveNetworkConnection;
 
 /**
  * Created by usamazafar on 04/06/2017.
@@ -41,7 +45,12 @@ public class NewsStoryNetworkCalls {
     }
 
     public void execute( int currentCount, List<NewsStory> newsStories){
-        new newsFetcher(newsStories, currentCount).execute();
+        if (!haveNetworkConnection(context)) {
+            HelpingMethods.showMessage(context,context.getString(R.string.no_internet_connection_message));
+        }
+        else {
+            new newsFetcher(newsStories, currentCount).execute();
+        }
     }
 
     private class newsFetcher extends AsyncTask<Void,Void,Void> {
@@ -75,8 +84,8 @@ public class NewsStoryNetworkCalls {
 
                 if (newsIDList == null) {
                     //No Internet Connection
-                }
-                else {
+                    errorMessage = context.getString(R.string.no_internet_connection_message);
+                } else {
                     //Check if the list is already up to date or if its a request for more news stories
                     if (!isUpToDate() || moreRequired()) {
 
@@ -89,7 +98,7 @@ public class NewsStoryNetworkCalls {
                         for (int i = newsStories.size(); i < currentCount; i++) {
 
                             // Step 1: Prepare GET URL
-                            String callURL = HelpingMethods.compileURLforFetchingItems(context,newsIDList.get(i));
+                            String callURL = HelpingMethods.compileURLforFetchingItems(context, newsIDList.get(i));
 
                             // Step 2: Execute the HTTP Request on URL and store response in String Result
                             String result = httpCall.makeHTTPCall(callURL);
@@ -112,6 +121,7 @@ public class NewsStoryNetworkCalls {
             // Catch the Exceptions
             catch (JSONException e) {
                 e.printStackTrace();
+                errorMessage = context.getString(R.string.json_exception_message);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -144,7 +154,12 @@ public class NewsStoryNetworkCalls {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            listener.afterFetchingNewsStories(newsIDList.size(), isUpToDate, errorMessage);
+
+            int size = 0;
+            if (newsIDList!= null)
+                size = newsIDList.size();
+
+            listener.afterFetchingNewsStories(size, isUpToDate, errorMessage);
         }
     }
 
@@ -153,4 +168,5 @@ public class NewsStoryNetworkCalls {
         void onProgressUpdated(List<NewsStory> arrayList);
         void afterFetchingNewsStories(int totalCount, boolean isUpToDate, String error);
     }
+
 }

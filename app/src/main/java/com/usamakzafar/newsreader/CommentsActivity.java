@@ -131,12 +131,12 @@ public class CommentsActivity extends AppCompatActivity implements CommentsNetwo
             }
         }));
 
-        swipeRefreshLayout.setRefreshing(true);
 
         // Load Comments
-        //commentsNetworkCalls = new CommentsNetworkCalls(this,this);
         commentsNetworkCalls = NetworkHandler.getComments(this,this);
-        commentsNetworkCalls.execute(commentIDs,maxLevel);
+        if(commentsNetworkCalls.execute(commentIDs,maxLevel))
+            swipeRefreshLayout.setRefreshing(true);
+
     }
 
 

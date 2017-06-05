@@ -11,6 +11,7 @@
     <string name="dummy_time">1 hour ago</string>
     <string name="dummy_comments">123</string>
 
+    <string name="no_internet_connection_message">Please check your internet connection</string>
     <string name="json_exception_message">Failed to parse the HTTP Response</string>
     <string name="interrupted_exception_message">An error occured while trying to fetch News Story Data</string>
     <string name="up_to_date_message">List is up to date</string>
@@ -30,7 +31,6 @@
         display only one level of reply for simplicity, I have included a setting in the comments screen to let you choose how many replies you would like to view\n\nAnyhow, it has been a good revision of my skills. Hope to hear from you soon! \n
         \nUsama K. Zafar</string>
 
-
-    <string name="NewsStoryTest"></string>
-    <string name="CommentTest"></string>
+    <string name="no_comments_message">This story has no comments</string>
+    <string name="scroll_bottom_message">Loading more stories</string>
 </resources>

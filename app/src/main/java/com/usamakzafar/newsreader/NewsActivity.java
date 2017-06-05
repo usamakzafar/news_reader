@@ -114,6 +114,9 @@ public class NewsActivity extends AppCompatActivity implements SwipeRefreshLayou
                     startActivity(intent);
                     overridePendingTransition(R.anim.left_from_right, R.anim.right_from_left);
                 }
+                else{
+                    HelpingMethods.showMessage(NewsActivity.this,getString(R.string.no_comments_message));
+                }
             }
 
             @Override
@@ -123,7 +126,6 @@ public class NewsActivity extends AppCompatActivity implements SwipeRefreshLayou
         }));
 
         //Fetch News Stories
-        //storyNetworkCalls = new NewsStoryNetworkCalls(this, this);
         storyNetworkCalls = NetworkHandler.getNewsStory(this,this);
         storyNetworkCalls.execute(currentCount,newsStories);
     }
@@ -201,8 +203,8 @@ public class NewsActivity extends AppCompatActivity implements SwipeRefreshLayou
                     int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
                     if (lastVisibleItemPosition != RecyclerView.NO_POSITION && lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1) {
                         //If User has Scrolled to the bottom of the list, fetch more news stories
+                        HelpingMethods.showMessage(NewsActivity.this, getString(R.string.scroll_bottom_message));
                         fetchMoreNewsStories();
-                        HelpingMethods.showMessage(NewsActivity.this, "Loading more stories");
                     }
                 }
             }

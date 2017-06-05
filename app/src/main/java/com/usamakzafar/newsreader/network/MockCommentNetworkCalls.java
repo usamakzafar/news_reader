@@ -21,7 +21,7 @@ class MockCommentNetworkCalls extends CommentsNetworkCalls {
 
 
     @Override
-    public void execute(JSONArray _commentIDs, int maxLevelOfReplies) {
+    public boolean execute(JSONArray _commentIDs, int maxLevelOfReplies) {
         Comment c = new Comment();
         c.setId(1);
         c.setText("Sample Comment");
@@ -31,5 +31,6 @@ class MockCommentNetworkCalls extends CommentsNetworkCalls {
         c.setTime(Calendar.getInstance());
 
         getListener().onProgressUpdated(c);
+        return true;
     }
 }

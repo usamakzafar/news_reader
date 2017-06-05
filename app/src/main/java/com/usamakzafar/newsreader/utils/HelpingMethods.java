@@ -1,6 +1,8 @@
 package com.usamakzafar.newsreader.utils;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -68,10 +70,29 @@ public class HelpingMethods {
         Toast.makeText(c, message, Toast.LENGTH_SHORT).show();
     }
 
+    // Method to convert the received comments from HTML to text
     public static String HTMLtoText(String string) {
         //For testing
         if (mocked) return "sample";
 
         return Html.fromHtml(string).toString();
+    }
+
+    // Network Check
+    public static boolean haveNetworkConnection(Context context) {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
     }
 }

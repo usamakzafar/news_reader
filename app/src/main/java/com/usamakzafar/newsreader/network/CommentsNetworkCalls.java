@@ -3,6 +3,7 @@ package com.usamakzafar.newsreader.network;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.usamakzafar.newsreader.R;
 import com.usamakzafar.newsreader.models.Comment;
 import com.usamakzafar.newsreader.utils.HelpingMethods;
 import com.usamakzafar.newsreader.utils.ParseJSON;
@@ -11,6 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.IOException;
+
+import static com.usamakzafar.newsreader.utils.HelpingMethods.haveNetworkConnection;
 
 /**
  * Created by usamazafar on 04/06/2017.
@@ -40,12 +43,19 @@ public class CommentsNetworkCalls {
 
     }
 
-    public void execute(JSONArray _commentIDs, int maxLevelOfReplies){
-        commentIDs = _commentIDs;
-        maxLevel = maxLevelOfReplies;
+    public boolean execute(JSONArray _commentIDs, int maxLevelOfReplies){
+        if (!haveNetworkConnection(context)) {
+            HelpingMethods.showMessage(context,context.getString(R.string.no_internet_connection_message));
+            return false;
+        }
+        else {
+            commentIDs = _commentIDs;
+            maxLevel = maxLevelOfReplies;
 
-        fetcher = new commentsFetcher();
-        fetcher.execute();
+            fetcher = new commentsFetcher();
+            fetcher.execute();
+            return true;
+        }
     }
 
     // Method to fetch Comments/Replies
@@ -116,6 +126,7 @@ public class CommentsNetworkCalls {
     }
 
     public void finishIt(){
-        this.fetcher.cancel(true);
+        if(fetcher!= null)
+            this.fetcher.cancel(true);
     }
 }
