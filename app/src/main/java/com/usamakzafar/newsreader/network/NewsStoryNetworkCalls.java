@@ -20,14 +20,17 @@ import java.util.List;
  */
 
 public class NewsStoryNetworkCalls {
-    private static String TAG = NewsStoryNetworkCalls.class.getSimpleName();
+    private String TAG = NewsStoryNetworkCalls.class.getSimpleName();
 
-    private static Context context;
-    private static ArrayList<Integer> newsIDList;
-    private static ArrayList<NewsStory> newsStories;
-    private static Integer latestStoryID;
-    private static Integer currentCount;
-    private static NewsStoriesUpdatedListener listener;
+    private Context context;
+    private ArrayList<Integer> newsIDList;
+    private Integer latestStoryID;
+
+    public NewsStoriesUpdatedListener getListener() {
+        return listener;
+    }
+
+    private NewsStoriesUpdatedListener listener;
 
     private HTTPCallMethod httpCall;
 

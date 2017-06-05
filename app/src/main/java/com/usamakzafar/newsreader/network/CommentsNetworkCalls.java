@@ -21,6 +21,12 @@ public class CommentsNetworkCalls {
     private Context context;
     private JSONArray commentIDs;
     private int maxLevel;
+
+    // For testing Purposes
+    public CommentsUpdatedListener getListener() {
+        return listener;
+    }
+
     private CommentsUpdatedListener listener;
     private commentsFetcher fetcher;
 

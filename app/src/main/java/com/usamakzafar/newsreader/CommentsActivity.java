@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.usamakzafar.newsreader.adapters.CommentsAdapter;
+import com.usamakzafar.newsreader.network.NetworkHandler;
 import com.usamakzafar.newsreader.utils.HelpingMethods;
 import com.usamakzafar.newsreader.listener.RecyclerItemClickListener;
 import com.usamakzafar.newsreader.models.Comment;
@@ -62,7 +63,7 @@ public class CommentsActivity extends AppCompatActivity implements CommentsNetwo
 
         //Setting the actionbar/toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.comments_toolbar);
-        toolbar.setTitle(getString(R.string.comment_activity_prefix) + " " + getIntent().getStringExtra("text"));
+        toolbar.setTitle(getString(R.string.comment_activity_prefix) + " " + getIntent().getStringExtra("title"));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -133,7 +134,8 @@ public class CommentsActivity extends AppCompatActivity implements CommentsNetwo
         swipeRefreshLayout.setRefreshing(true);
 
         // Load Comments
-        commentsNetworkCalls = new CommentsNetworkCalls(this,this);
+        //commentsNetworkCalls = new CommentsNetworkCalls(this,this);
+        commentsNetworkCalls = NetworkHandler.getComments(this,this);
         commentsNetworkCalls.execute(commentIDs,maxLevel);
     }
 

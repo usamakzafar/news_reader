@@ -1,6 +1,7 @@
 package com.usamakzafar.newsreader.utils;
 
 import android.content.Context;
+import android.text.Html;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -25,8 +26,8 @@ import java.util.concurrent.ExecutionException;
 
 public class HelpingMethods {
 
-    //Tag for logs
-    private static String TAG = HelpingMethods.class.getSimpleName();
+    // Boolean check to see if the methods are being called by test classes
+    public static boolean mocked = false;
 
     //Method to extract the Top Stories IDs from String received from Hacker News
     public static ArrayList<Integer> readNewsIDsFromString(String s) throws JSONException {
@@ -35,7 +36,7 @@ public class HelpingMethods {
             //Parse the News Stories IDs in JSON Array
             JSONArray list = new JSONArray(s);
 
-            Log.i(TAG, "Adding " + list.length() + " IDs to Array List");
+//            Log.i(TAG, "Adding " + list.length() + " IDs to Array List");
 
             ArrayList<Integer> newsIDList = new ArrayList<>();
             // ADD Each ID to an Array List
@@ -65,5 +66,12 @@ public class HelpingMethods {
     // Method for showing message on screen
     public static void showMessage(Context c, String message){
         Toast.makeText(c, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public static String HTMLtoText(String string) {
+        //For testing
+        if (mocked) return "sample";
+
+        return Html.fromHtml(string).toString();
     }
 }

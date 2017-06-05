@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.usamakzafar.newsreader.network.NetworkHandler;
 import com.usamakzafar.newsreader.utils.HelpingMethods;
 import com.usamakzafar.newsreader.adapters.NewsStoryAdapter;
 import com.usamakzafar.newsreader.listener.RecyclerItemClickListener;
@@ -106,7 +107,7 @@ public class NewsActivity extends AppCompatActivity implements SwipeRefreshLayou
 
                     //Make Intent for Comments Activity
                     Intent intent = new Intent(NewsActivity.this, CommentsActivity.class);
-                    intent.putExtra("text", selectedNewsStory.getTitle());
+                    intent.putExtra("title", selectedNewsStory.getTitle());
                     intent.putExtra("kids", selectedNewsStory.getKids().toString());
 
                     //Start Intent with a little animation
@@ -122,9 +123,9 @@ public class NewsActivity extends AppCompatActivity implements SwipeRefreshLayou
         }));
 
         //Fetch News Stories
-        storyNetworkCalls = new NewsStoryNetworkCalls(this, this);
+        //storyNetworkCalls = new NewsStoryNetworkCalls(this, this);
+        storyNetworkCalls = NetworkHandler.getNewsStory(this,this);
         storyNetworkCalls.execute(currentCount,newsStories);
-
     }
 
     //Method to increase number of Loaded stories (initially 20)

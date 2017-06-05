@@ -102,7 +102,9 @@ public class ParseJSON {
                 comment.setType(parseString(object, KEY_TYPE));
 
                 // Comment Text is in HTML and Needs to be converted
-                comment.setText(Html.fromHtml(parseString(object, KEY_COMMENT_TEXT)).toString());
+                String html = parseString(object, KEY_COMMENT_TEXT);
+                String text = HelpingMethods.HTMLtoText(html);
+                comment.setText(text);
 
                 comment.setKids(parseKids(object));
 
