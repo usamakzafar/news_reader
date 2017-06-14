@@ -69,8 +69,6 @@ public class NewsStoryAdapter extends RecyclerView.Adapter<NewsStoryAdapter.News
         }catch (Exception e) {e.printStackTrace();}
     }
 
-
-
     @Override
     public int getItemCount() {
         return newsStories.size();

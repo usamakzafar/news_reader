@@ -8,15 +8,39 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 /**
  * Created by usamazafar on 04/06/2017.
  */
 
 public class HTTPCallMethod {
-    // Method to make the HTTP Call
+
     public String makeHTTPCall(String callURL) throws IOException {
 
-        String TAG = "AsyncTaskGetNewsContent";
+        String TAG = "Using OKHTTP";
+
+        Log.i(TAG, "Beginning Call on URL: " + callURL);
+
+        OkHttpClient client = new OkHttpClient();
+        Request.Builder builder = new Request.Builder();
+        builder.url(callURL);
+        Request request = builder.build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            return response.body().string();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+    // Method to make the HTTP Call
+    public String makeHTTPCall2(String callURL) throws IOException {
+
+        String TAG = "Using HTTPurlconnection";
 
         Log.i(TAG, "Beginning Call on URL: " + callURL);
 
