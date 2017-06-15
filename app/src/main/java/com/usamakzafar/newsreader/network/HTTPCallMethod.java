@@ -18,6 +18,7 @@ import okhttp3.Response;
 
 public class HTTPCallMethod {
 
+    // using OKHTTP
     public String makeHTTPCall(String callURL) throws IOException {
 
         String TAG = "Using OKHTTP";
@@ -37,8 +38,9 @@ public class HTTPCallMethod {
         }
         return null;
     }
-    // Method to make the HTTP Call
-    public String makeHTTPCall2(String callURL) throws IOException {
+
+    // using HTTPUrlConnection
+    /*public String makeHTTPCall2(String callURL) throws IOException {
 
         String TAG = "Using HTTPurlconnection";
 
@@ -67,5 +69,5 @@ public class HTTPCallMethod {
 
         Log.i(TAG, "Returning String: " + result);
         return result;
-    }
+    }*/
 }

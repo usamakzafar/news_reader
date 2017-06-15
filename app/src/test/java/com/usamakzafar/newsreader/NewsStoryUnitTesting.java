@@ -46,4 +46,11 @@ public class NewsStoryUnitTesting {
         tester.checkVariablesReturningCorrectly();
     }
 
+    @Test
+    public void test_c_checkAdapter() throws Exception{
+        tester.testIfNewsStoryIsParsingCorrectly();
+        tester.checkVariablesReturningCorrectly();
+        tester.checkIfAdapterIsWorkingCorrectly();
+    }
+
 }

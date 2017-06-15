@@ -27,8 +27,8 @@ public class NewsStoryNetworkCalls {
     private String TAG = NewsStoryNetworkCalls.class.getSimpleName();
 
     private Context context;
-    private ArrayList<Integer> newsIDList;
     private Integer latestStoryID;
+    private ArrayList<Integer> newsIDList;
 
     public NewsStoriesUpdatedListener getListener() {
         return listener;

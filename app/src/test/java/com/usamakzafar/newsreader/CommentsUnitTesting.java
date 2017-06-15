@@ -31,4 +31,13 @@ public class CommentsUnitTesting {
         tester.testIfCommentIsParsingCorrectly();
         tester.checkVariablesReturningCorrectly();
     }
+
+
+    @Test
+    public void test_c_checkAdapter() throws Exception{
+        tester.testIfCommentIsParsingCorrectly();
+        tester.checkVariablesReturningCorrectly();
+        tester.checkIfAdapterIsWorkingCorrectly();
+        tester.checkViewHolder();
+    }
 }

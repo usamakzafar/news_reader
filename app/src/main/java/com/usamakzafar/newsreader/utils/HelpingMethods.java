@@ -73,7 +73,7 @@ public class HelpingMethods {
     // Method to convert the received comments from HTML to text
     public static String HTMLtoText(String string) {
         //For testing
-        if (mocked) return "sample";
+        if (mocked) return string;
 
         return Html.fromHtml(string).toString();
     }

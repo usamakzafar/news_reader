@@ -85,12 +85,4 @@ public class Comment {
     public void setLevel(int level) {
         this.level = level;
     }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
 }

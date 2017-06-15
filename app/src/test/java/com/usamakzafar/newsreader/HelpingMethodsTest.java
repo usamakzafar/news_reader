@@ -1,6 +1,7 @@
 package com.usamakzafar.newsreader;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 
 import com.usamakzafar.newsreader.utils.HelpingMethods;
 import com.usamakzafar.newsreader.utils.ParseJSON;
@@ -11,9 +12,14 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -48,6 +54,12 @@ public class HelpingMethodsTest {
         assertEquals(Integer.valueOf(14473377), list.get(2));
         assertEquals(Integer.valueOf(14475489), list.get(3));
         assertEquals(Integer.valueOf(14471931), list.get(4));
+
+    }
+
+    @Test
+    public void test_c_method_parseDate() throws Exception{
+
 
     }
 
