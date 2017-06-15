@@ -11,6 +11,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +37,14 @@ public class CommentsActivity extends AppCompatActivity implements CommentsNetwo
     // Recycler View
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerItemClickListener listener;
+
+    public void setListener(RecyclerItemClickListener listener) {
+        this.listener = listener;
+    }
+    public RecyclerItemClickListener getListener() {
+        return listener;
+    }
 
     // Adapter for the Recycler View
     private CommentsAdapter mAdapter;
@@ -60,6 +69,34 @@ public class CommentsActivity extends AppCompatActivity implements CommentsNetwo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
+
+        listener = new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+                //Get Selected News Story
+                Comment comment = commentsList.get(position);
+
+                //Open an Alert to show the full comment
+                AlertDialog.Builder commentDialog = new AlertDialog.Builder(CommentsActivity.this);
+
+                String howLongAgo = (String) DateUtils.getRelativeTimeSpanString(
+                        comment.getTime().getTimeInMillis(),
+                        System.currentTimeMillis(),
+                        1);
+
+                commentDialog.setTitle( howLongAgo + " by " + comment.getAuthor());
+                commentDialog.setMessage(comment.getText());
+                commentDialog.setPositiveButton("Close",null);
+                commentDialog.show();
+
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        });
 
         //Setting the actionbar/toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.comments_toolbar);
@@ -109,32 +146,12 @@ public class CommentsActivity extends AppCompatActivity implements CommentsNetwo
 
 
         //Implement on item Click Listener to view full comment
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-
-                //Get Selected News Story
-                Comment comment = commentsList.get(position);
-
-                //Open an Alert to show the full comment
-                AlertDialog.Builder commentDialog = new AlertDialog.Builder(CommentsActivity.this);
-                commentDialog.setTitle(HelpingMethods.parseDate(comment.getTime()) + " by " + comment.getAuthor());
-                commentDialog.setMessage(comment.getText());
-                commentDialog.setPositiveButton("Close",null);
-                commentDialog.show();
-
-            }
-
-            @Override
-            public void onLongItemClick(View view, int position) {
-
-            }
-        }));
+        recyclerView.addOnItemTouchListener(listener);
 
 
         // Load Comments
         commentsNetworkCalls = NetworkHandler.getComments(this,this);
-        if(commentsNetworkCalls.execute(commentIDs,maxLevel))
+        if(commentsNetworkCalls.execute(commentIDs,maxLevel) && !NetworkHandler.isMocked)
             swipeRefreshLayout.setRefreshing(true);
 
     }
@@ -152,7 +169,8 @@ public class CommentsActivity extends AppCompatActivity implements CommentsNetwo
 
     @Override
     public void onProgressUpdated(Comment comment) {
-        if(swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
+        //if(swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
 
         commentsList.add(comment);
         mAdapter.notifyDataSetChanged();

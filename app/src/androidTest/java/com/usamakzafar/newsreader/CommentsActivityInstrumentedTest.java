@@ -4,17 +4,31 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
+import android.text.format.DateUtils;
+import android.view.LayoutInflater;
+import android.view.View;
 
+import com.usamakzafar.newsreader.adapters.CommentsAdapter;
+import com.usamakzafar.newsreader.adapters.CommentsViewHolder;
+import com.usamakzafar.newsreader.listener.RecyclerItemClickListener;
+import com.usamakzafar.newsreader.models.Comment;
 import com.usamakzafar.newsreader.network.NetworkHandler;
+import com.usamakzafar.newsreader.utils.HelpingMethods;
+import com.usamakzafar.newsreader.utils.ParseJSON;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.spy;
 
 /**
  * Created by usamazafar on 05/06/2017.
@@ -78,6 +92,49 @@ public class CommentsActivityInstrumentedTest {
     public void test_e_check_if_actionbar_shows_correct_title(){
         tester.checkIfActionBarExists();
         tester.checkIfActionbarShowsCorrectTitle();
+    }
+
+    @Test
+    public void test_f_adapterViewHolder(){
+
+        String commentJson= "{\"by\":\"wallnuss\",\"id\":14467718" +
+                ",\"kids\":[14467781,14468256,14470479,14469443,14470448]" +
+                ",\"parent\":14458955,\"text\":\"sample text\"" +
+                ",\"time\":1496381915,\"type\":\"comment\"}";
+
+        Comment comment = ParseJSON.parseComments(commentJson);
+        comment.setLevel(0);
+        Assert.assertNotNull(comment);
+
+        LayoutInflater jomarzi = LayoutInflater.from(mActivityRule.getActivity());
+        View view = jomarzi.inflate(R.layout.comment_list_item,null);
+
+        assertNotNull(view);
+
+        CommentsViewHolder holder = new CommentsViewHolder(mActivityRule.getActivity(),view);
+        assertNotNull(holder);
+
+        //CommentsViewHolder spyholder = spy(holder);
+        //doNothing().when(spyholder);
+        holder.addCommentToView(comment,0);
+
+
+        assertEquals(holder.getAuthor().getText()         ,comment.getAuthor()         );
+        assertEquals(holder.getReplies().getText()        ,comment.getKids().length() + " replies"  );
+        assertEquals(holder.getText().getText()           ,comment.getText()           );
+
+        String howLongAgo = (String) DateUtils.getRelativeTimeSpanString(
+                comment.getTime().getTimeInMillis(),
+                System.currentTimeMillis(),
+                1);
+
+        assertEquals(holder.getTime().getText()           ,howLongAgo);
+
+    }
+
+    @Test
+    public void test_g_listener(){
+        //tester.listener();
     }
 
 }

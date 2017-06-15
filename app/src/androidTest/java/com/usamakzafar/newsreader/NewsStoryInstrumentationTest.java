@@ -53,7 +53,7 @@ public class NewsStoryInstrumentationTest {
         tester.checkIfRecyclerViewIsPopulated();
         tester.checkIfRowZeroExists();
         tester.clickRowZeroAndVerifyCommentsActivityStarted();
-        tester.verifyIfCorrectValuesWerePassedToTheNewActivity();
+        tester.verifyIfValuesWerePassedToTheNewActivity();
     }
 
     @Test

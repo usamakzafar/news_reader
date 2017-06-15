@@ -57,14 +57,6 @@ public class HelpingMethods {
 
     }
 
-    // Date parsing to to return time elapsed
-    public static String parseDate(Calendar calendar){
-        long now = System.currentTimeMillis();
-        long then = calendar.getTimeInMillis();
-
-        return (String) DateUtils.getRelativeTimeSpanString(then,now,1);
-    }
-
     // Method for showing message on screen
     public static void showMessage(Context c, String message){
         Toast.makeText(c, message, Toast.LENGTH_SHORT).show();

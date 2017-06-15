@@ -2,6 +2,7 @@ package com.usamakzafar.newsreader.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.usamakzafar.newsreader.models.NewsStory;
 import com.usamakzafar.newsreader.utils.HelpingMethods;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -63,7 +65,12 @@ public class NewsStoryAdapter extends RecyclerView.Adapter<NewsStoryAdapter.News
             holder.author.setText(story.getAuthor());
             holder.score.setText(       String.valueOf(story.getScore()));
             holder.comments.setText(    String.valueOf(story.getDescendants()));
-            holder.time.setText(HelpingMethods.parseDate(story.getTime()));
+
+            String howLongAgo = (String) DateUtils.getRelativeTimeSpanString(
+                    story.getTime().getTimeInMillis(),
+                    System.currentTimeMillis(),
+                    1);
+            holder.time.setText(howLongAgo);
 
             setAnimation(holder.itemView, position);
         }catch (Exception e) {e.printStackTrace();}

@@ -65,12 +65,16 @@ public class CommentsTester {
 
         adapter = new CommentsAdapter(context,commentsList);
 
+        //adapter.getitem
+
         assertNotNull(adapter);
         assertEquals(1, adapter.getItemCount());
-
 
     }
 
     public void checkViewHolder() {
+
+
+
     }
 }

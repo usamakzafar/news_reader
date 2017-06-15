@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.v7.widget.RecyclerView;
+import android.view.MotionEvent;
 import android.view.View;
 
+import com.usamakzafar.newsreader.listener.RecyclerItemClickListener;
 import com.usamakzafar.newsreader.models.Comment;
 import com.usamakzafar.newsreader.network.NetworkHandler;
 
@@ -21,6 +23,11 @@ import static com.usamakzafar.newsreader.RecyclerViewMatcher.withRecyclerView;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by usamazafar on 05/06/2017.
@@ -70,5 +77,20 @@ class CommentsActivityTester {
         String title = activity.getSupportActionBar().getTitle().toString();
         assertNotNull(title);
         assertEquals("Comments from Test Scenario", title);
+    }
+
+
+    public void listener() {
+        RecyclerItemClickListener spylistener = spy(activity.getListener());
+        RecyclerItemClickListener.OnItemClickListener spyOnitem = spy(spylistener.getmListener());
+        activity.getListener().setmListener(spyOnitem);
+
+        activity.setListener(spylistener);
+
+        verify(spylistener, times(1)).onInterceptTouchEvent(any(RecyclerView.class),any(MotionEvent.class));
+        verify(spyOnitem, times(1)).onItemClick(any(View.class),anyInt());
+
+
+
     }
 }
