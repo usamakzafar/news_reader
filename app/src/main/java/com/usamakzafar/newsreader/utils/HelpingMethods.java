@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.usamakzafar.newsreader.R;
+import com.usamakzafar.newsreader.network.NetworkHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;

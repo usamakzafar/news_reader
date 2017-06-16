@@ -32,8 +32,7 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder{
         space    = (TextView) itemView.findViewById(R.id.space);
     }
 
-    public void clearAnimation()
-    {
+    public void clearAnimation() {
         itemView.clearAnimation();
     }
 
@@ -53,29 +52,16 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder{
         return replies;
     }
 
-    public TextView getSpace() {
-        return space;
-    }
-
-    public Context getContext() {
-        return context;
-    }
-
-    public int getLastPosition() {
-        return lastPosition;
-    }
-
     public void addCommentToView(Comment comment, int position){
         // Populate the view
         text.setText(comment.getText());
         text.setMaxLines(20);
         author.setText(comment.getAuthor());
 
-        String howLongAgo = (String) DateUtils.getRelativeTimeSpanString(
+        time.setText((String) DateUtils.getRelativeTimeSpanString(
                 comment.getTime().getTimeInMillis(),
                 System.currentTimeMillis(),
-                1);
-        time.setText(howLongAgo);
+                1));
 
         String numOfReplies = comment.getKids() != null ? String.valueOf(comment.getKids().length()) : "0";
         replies.setText( numOfReplies + " replies");

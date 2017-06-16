@@ -57,6 +57,13 @@ public class NewsStoryInstrumentationTest {
     }
 
     @Test
+    public void test_c_check_Misc(){
+        tester.checkIfRecyclerViewExists();
+        tester.checkIfRecyclerViewIsPopulated();
+        tester.checkIfRowZeroExists();
+    }
+
+    @Test
     public void test_d_check_if_actionbar_is_present(){
         tester.checkIfActionBarExists();
     }

@@ -1,9 +1,11 @@
 package com.usamakzafar.newsreader;
 
 import android.test.mock.MockContext;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.usamakzafar.newsreader.adapters.CommentsAdapter;
+import com.usamakzafar.newsreader.adapters.CommentsViewHolder;
 import com.usamakzafar.newsreader.models.Comment;
 import com.usamakzafar.newsreader.utils.HelpingMethods;
 import com.usamakzafar.newsreader.utils.ParseJSON;
@@ -72,9 +74,4 @@ public class CommentsTester {
 
     }
 
-    public void checkViewHolder() {
-
-
-
-    }
 }

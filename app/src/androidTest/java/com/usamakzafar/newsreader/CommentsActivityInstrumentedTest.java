@@ -28,6 +28,7 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 
 /**
@@ -135,6 +136,7 @@ public class CommentsActivityInstrumentedTest {
     @Test
     public void test_g_listener(){
         //tester.listener();
+        tester.viewholder();
     }
 
 }

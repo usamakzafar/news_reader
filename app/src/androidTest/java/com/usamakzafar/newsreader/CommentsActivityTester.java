@@ -5,12 +5,16 @@ import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.usamakzafar.newsreader.adapters.CommentsViewHolder;
 import com.usamakzafar.newsreader.listener.RecyclerItemClickListener;
 import com.usamakzafar.newsreader.models.Comment;
 import com.usamakzafar.newsreader.network.NetworkHandler;
+import com.usamakzafar.newsreader.utils.ParseJSON;
 
 import org.junit.Rule;
 
@@ -25,6 +29,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -90,6 +95,34 @@ class CommentsActivityTester {
         verify(spylistener, times(1)).onInterceptTouchEvent(any(RecyclerView.class),any(MotionEvent.class));
         verify(spyOnitem, times(1)).onItemClick(any(View.class),anyInt());
 
+
+
+    }
+
+    public void viewholder() {
+        View itemView = LayoutInflater.from(activity.getApplicationContext())
+                .inflate(R.layout.comment_list_item, null, false);
+
+        CommentsViewHolder holder = new CommentsViewHolder(activity.getApplicationContext(),itemView);
+        String commentJson= "{\"by\":\"wallnuss\",\"id\":14467718" +
+                ",\"kids\":[14467781,14468256,14470479,14469443,14470448]" +
+                ",\"parent\":14458955,\"text\":\"sample text\"" +
+                ",\"time\":1496381915,\"type\":\"comment\"}";
+
+        Comment comment = ParseJSON.parseComments(commentJson);
+        comment.setLevel(0);
+        holder.addCommentToView(comment,0);
+
+        assertEquals(  comment.getAuthor() , holder.getAuthor().getText().toString() );
+        assertEquals(  comment.getKids().length() + " replies"  , holder.getReplies().getText().toString() );
+        assertEquals(  comment.getText()   , holder.getText().getText().toString() );
+
+        String howLongAgo = (String) DateUtils.getRelativeTimeSpanString(
+                comment.getTime().getTimeInMillis(),
+                System.currentTimeMillis(),
+                1);
+
+        assertEquals(  howLongAgo   , holder.getTime().getText().toString());
 
 
     }

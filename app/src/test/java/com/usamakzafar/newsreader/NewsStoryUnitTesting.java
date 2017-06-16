@@ -6,12 +6,14 @@ import android.text.Spanned;
 
 import com.usamakzafar.newsreader.models.Comment;
 import com.usamakzafar.newsreader.models.NewsStory;
+import com.usamakzafar.newsreader.network.NetworkHandler;
 import com.usamakzafar.newsreader.utils.HelpingMethods;
 import com.usamakzafar.newsreader.utils.ParseJSON;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 
@@ -33,6 +35,8 @@ public class NewsStoryUnitTesting {
     @Before
     public void setUp(){
         tester= new NewsStoryTester();
+        NetworkHandler.isMocked = true;
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
@@ -51,6 +55,11 @@ public class NewsStoryUnitTesting {
         tester.testIfNewsStoryIsParsingCorrectly();
         tester.checkVariablesReturningCorrectly();
         tester.checkIfAdapterIsWorkingCorrectly();
+    }
+
+    @Test
+    public void test_d_checkFetcher() throws Exception{
+        tester.checkfetcher();
     }
 
 }

@@ -38,6 +38,5 @@ public class CommentsUnitTesting {
         tester.testIfCommentIsParsingCorrectly();
         tester.checkVariablesReturningCorrectly();
         tester.checkIfAdapterIsWorkingCorrectly();
-        tester.checkViewHolder();
     }
 }

@@ -100,7 +100,7 @@ public class CommentsActivity extends AppCompatActivity implements CommentsNetwo
 
         //Setting the actionbar/toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.comments_toolbar);
-        toolbar.setTitle(getString(R.string.comment_activity_prefix) + " " + getIntent().getStringExtra("title"));
+        toolbar.setTitle(getCommentsActivityTitle());
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -232,5 +232,9 @@ public class CommentsActivity extends AppCompatActivity implements CommentsNetwo
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public String getCommentsActivityTitle() {
+        return getString(R.string.comment_activity_prefix) + " " + getIntent().getStringExtra("title");
     }
 }
