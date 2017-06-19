@@ -19,14 +19,14 @@ import android.view.View;
 import com.usamakzafar.newsreader.network.NetworkHandler;
 import com.usamakzafar.newsreader.utils.HelpingMethods;
 import com.usamakzafar.newsreader.adapters.NewsStoryAdapter;
-import com.usamakzafar.newsreader.listener.RecyclerItemClickListener;
 import com.usamakzafar.newsreader.models.NewsStory;
 import com.usamakzafar.newsreader.network.NewsStoryNetworkCalls;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewsActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, NewsStoryNetworkCalls.NewsStoriesUpdatedListener {
+public class NewsActivity extends AppCompatActivity
+        implements SwipeRefreshLayout.OnRefreshListener, NewsStoryNetworkCalls.NewsStoriesUpdatedListener {
 
     private String TAG = NewsActivity.class.getSimpleName();
 
@@ -37,8 +37,14 @@ public class NewsActivity extends AppCompatActivity implements SwipeRefreshLayou
     private RecyclerView.LayoutManager mLayoutManager;
     private boolean isRecyclerViewLoading;
 
+    private NetworkHandler handler= new NetworkHandler();
+
     //Adapter for the Recycler View
     private NewsStoryAdapter mAdapter;
+
+    public static int getCurrentCount() {
+        return currentCount;
+    }
 
     //Variables to keep track of the currently displayed stories
     private static int currentCount = 20;
@@ -49,8 +55,12 @@ public class NewsActivity extends AppCompatActivity implements SwipeRefreshLayou
     //Variables to store the fetched News Stories
     private static List<NewsStory> newsStories;
 
+    public NewsStoryNetworkCalls getStoryNetworkCalls() {
+        return storyNetworkCalls;
+    }
+
     // For making the network calls for news
-    private NewsStoryNetworkCalls storyNetworkCalls;
+    private NewsStoryNetworkCalls storyNetworkCalls = handler.getNewsStory(this,this);
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -70,6 +80,14 @@ public class NewsActivity extends AppCompatActivity implements SwipeRefreshLayou
         swipeRefreshLayout.setOnRefreshListener(this);
 
         initActivity();
+    }
+
+    public NetworkHandler getHandler() {
+        return handler;
+    }
+
+    public void setHandler(NetworkHandler handler) {
+        this.handler = handler;
     }
 
     public void initActivity() {
@@ -94,44 +112,13 @@ public class NewsActivity extends AppCompatActivity implements SwipeRefreshLayou
         //On Scroll Listener to detect whether the ser has scrolled to the bottom of the list.
         recyclerView.setOnScrollListener(scrollListener);
 
-        //Implement on item Click Listener
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-
-                //Get Selected News Story
-                NewsStory selectedNewsStory = newsStories.get(position);
-
-                //Check if the News Story has any replies
-                if (selectedNewsStory.getKids().length() > 0 && selectedNewsStory.getDescendants() >0) {
-
-                    //Make Intent for Comments Activity
-                    Intent intent = new Intent(NewsActivity.this, CommentsActivity.class);
-                    intent.putExtra("title", selectedNewsStory.getTitle());
-                    intent.putExtra("kids", selectedNewsStory.getKids().toString());
-
-                    //Start Intent with a little animation
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.left_from_right, R.anim.right_from_left);
-                }
-                else{
-                    HelpingMethods.showMessage(NewsActivity.this,getString(R.string.no_comments_message));
-                }
-            }
-
-            @Override
-            public void onLongItemClick(View view, int position) {
-
-            }
-        }));
-
         //Fetch News Stories
-        storyNetworkCalls = NetworkHandler.getNewsStory(this,this);
+        //storyNetworkCalls = handler.getNewsStory(this,this); TODO uncomment
         storyNetworkCalls.execute(currentCount,newsStories);
     }
 
     //Method to increase number of Loaded stories (initially 20)
-    private void fetchMoreNewsStories() {
+    public void fetchMoreNewsStories() {
         //Increase the number of stories to load
         if(currentCount+20 <= totalStoriesCount)
             currentCount += 20;

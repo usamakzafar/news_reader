@@ -36,12 +36,21 @@ public class NewsStoryNetworkCalls {
 
     private NewsStoriesUpdatedListener listener;
 
-    private HTTPCallMethod httpCall;
+    public HelpingMethods getHttpCall() {
+        return httpCall;
+    }
+
+    public void setHttpCall(HelpingMethods httpCall) {
+        this.httpCall = httpCall;
+    }
+
+    private HelpingMethods httpCall;
+
 
     public NewsStoryNetworkCalls(Context c, NewsStoriesUpdatedListener storiesListener){
         context = c;
         listener = storiesListener;
-        httpCall = new HTTPCallMethod();
+        httpCall = new HelpingMethods();
     }
 
     public void execute( int currentCount, List<NewsStory> newsStories){
@@ -79,8 +88,7 @@ public class NewsStoryNetworkCalls {
         protected Void doInBackground(Void... params) {
             try {
                 //Fetch the Updated List of stories
-                String s = httpCall.makeHTTPCall(context.getString(R.string.RestTopStoriesURL));
-                newsIDList = HelpingMethods.readNewsIDsFromString(s);
+                newsIDList = fetchUpdatedList();
 
                 if (newsIDList == null) {
                     //No Internet Connection
@@ -101,7 +109,7 @@ public class NewsStoryNetworkCalls {
                             String callURL = HelpingMethods.compileURLforFetchingItems(context, newsIDList.get(i));
 
                             // Step 2: Execute the HTTP Request on URL and store response in String Result
-                            String result = httpCall.makeHTTPCall(callURL);
+                            String result = httpCall.makeHTTPCallForObject(callURL);
 
                             // Step 3: Parse & Return the resulting NewsStory from the Result String
                             NewsStory story = ParseJSON.parseNewsStory(result);
@@ -128,6 +136,12 @@ public class NewsStoryNetworkCalls {
 
             return null;
 
+        }
+
+        // Fetching updated list of news story IDs
+        private ArrayList<Integer> fetchUpdatedList() throws IOException, JSONException {
+            String s = httpCall.makeHTTPCallForArray(context.getString(R.string.RestTopStoriesURL));
+            return HelpingMethods.readNewsIDsFromString(s);
         }
 
         //Method to check if the user has requested more stories to be loaded

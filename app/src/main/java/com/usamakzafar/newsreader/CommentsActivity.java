@@ -22,7 +22,6 @@ import android.widget.EditText;
 import com.usamakzafar.newsreader.adapters.CommentsAdapter;
 import com.usamakzafar.newsreader.network.NetworkHandler;
 import com.usamakzafar.newsreader.utils.HelpingMethods;
-import com.usamakzafar.newsreader.listener.RecyclerItemClickListener;
 import com.usamakzafar.newsreader.models.Comment;
 import com.usamakzafar.newsreader.network.CommentsNetworkCalls;
 
@@ -37,14 +36,6 @@ public class CommentsActivity extends AppCompatActivity implements CommentsNetwo
     // Recycler View
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private RecyclerItemClickListener listener;
-
-    public void setListener(RecyclerItemClickListener listener) {
-        this.listener = listener;
-    }
-    public RecyclerItemClickListener getListener() {
-        return listener;
-    }
 
     // Adapter for the Recycler View
     private CommentsAdapter mAdapter;
@@ -55,8 +46,12 @@ public class CommentsActivity extends AppCompatActivity implements CommentsNetwo
     // List of all Comments
     private List<Comment> commentsList;
 
+    public CommentsNetworkCalls getCommentsNetworkCalls() {
+        return commentsNetworkCalls;
+    }
+
     // For making the network calls for comments
-    private CommentsNetworkCalls commentsNetworkCalls;
+    private CommentsNetworkCalls commentsNetworkCalls = new NetworkHandler().getComments(this,this);
 
     // Config Variable to store the required level number
     private int maxLevel;
@@ -70,37 +65,9 @@ public class CommentsActivity extends AppCompatActivity implements CommentsNetwo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
 
-        listener = new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-
-                //Get Selected News Story
-                Comment comment = commentsList.get(position);
-
-                //Open an Alert to show the full comment
-                AlertDialog.Builder commentDialog = new AlertDialog.Builder(CommentsActivity.this);
-
-                String howLongAgo = (String) DateUtils.getRelativeTimeSpanString(
-                        comment.getTime().getTimeInMillis(),
-                        System.currentTimeMillis(),
-                        1);
-
-                commentDialog.setTitle( howLongAgo + " by " + comment.getAuthor());
-                commentDialog.setMessage(comment.getText());
-                commentDialog.setPositiveButton("Close",null);
-                commentDialog.show();
-
-            }
-
-            @Override
-            public void onLongItemClick(View view, int position) {
-
-            }
-        });
-
         //Setting the actionbar/toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.comments_toolbar);
-        toolbar.setTitle(getCommentsActivityTitle());
+        toolbar.setTitle(getCommentsActivityTitle(getIntent().getStringExtra("title")));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -145,13 +112,9 @@ public class CommentsActivity extends AppCompatActivity implements CommentsNetwo
         recyclerView.addItemDecoration(dividerItemDecoration);
 
 
-        //Implement on item Click Listener to view full comment
-        recyclerView.addOnItemTouchListener(listener);
-
-
         // Load Comments
-        commentsNetworkCalls = NetworkHandler.getComments(this,this);
-        if(commentsNetworkCalls.execute(commentIDs,maxLevel) && !NetworkHandler.isMocked)
+        /*commentsNetworkCalls = new NetworkHandler().getComments(this,this);*/
+        if(commentsNetworkCalls.execute(commentIDs,maxLevel))
             swipeRefreshLayout.setRefreshing(true);
 
     }
@@ -163,7 +126,7 @@ public class CommentsActivity extends AppCompatActivity implements CommentsNetwo
             commentIDs = new JSONArray(kids);
         } catch (JSONException e) {
             e.printStackTrace();
-            HelpingMethods.showMessage(this, "Unable to Read Comments");
+            HelpingMethods.showMessage(this, getString(R.string.comment_ids_error));
         }
     }
 
@@ -234,7 +197,7 @@ public class CommentsActivity extends AppCompatActivity implements CommentsNetwo
         return super.onOptionsItemSelected(item);
     }
 
-    public String getCommentsActivityTitle() {
-        return getString(R.string.comment_activity_prefix) + " " + getIntent().getStringExtra("title");
+    public String getCommentsActivityTitle(String title) {
+        return getString(R.string.comment_activity_prefix) + " " + title;
     }
 }

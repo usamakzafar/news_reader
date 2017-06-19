@@ -38,7 +38,7 @@ public class NewsStoryTester {
     Context mMockContext;
 
 
-    public void testIfNewsStoryIsParsingCorrectly(){
+    public void testIfNewsStoryIsParsingCorrectly() throws JSONException {
         String news= "{\"by\":\"risk\",\"descendants\":13,\"id\":14474956,\"kids\":[14475330,14475607,14475244,14475259,14475303,14475553,14475334],\"score\":176,\"time\":1496462842,\"title\":\"SeaGlass – Enabling City-Wide IMSI-Catcher Detection\",\"type\":\"story\",\"url\":\"https://seaglass.cs.washington.edu/\"}";
 
         story = ParseJSON.parseNewsStory(news);

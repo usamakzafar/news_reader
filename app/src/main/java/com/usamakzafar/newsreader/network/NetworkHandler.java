@@ -10,20 +10,15 @@ import com.usamakzafar.newsreader.models.NewsStory;
 
 public class NetworkHandler {
 
-    public static boolean isMocked = false;
-
-    public static NewsStoryNetworkCalls getNewsStory(Context c, NewsStoryNetworkCalls.NewsStoriesUpdatedListener listener){
-        if (isMocked)
-            return new MockNewsStoryNetworkCalls(c,listener);
-        else
+    public NewsStoryNetworkCalls getNewsStory(Context c, NewsStoryNetworkCalls.NewsStoriesUpdatedListener listener){
             return new NewsStoryNetworkCalls(c,listener);
     }
 
 
-    public static CommentsNetworkCalls getComments(Context c, CommentsNetworkCalls.CommentsUpdatedListener listener){
-        if (isMocked)
-            return new MockCommentNetworkCalls(c,listener);
-        else
+    public CommentsNetworkCalls getComments(Context c, CommentsNetworkCalls.CommentsUpdatedListener listener){
+       // if (isMocked)
+       //     return new MockCommentNetworkCalls(c,listener);
+       // else
             return new CommentsNetworkCalls(c,listener);
     }
 }

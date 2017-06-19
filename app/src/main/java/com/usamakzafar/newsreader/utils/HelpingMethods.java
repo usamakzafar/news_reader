@@ -23,6 +23,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 /**
  * Created by usamazafar on 01/06/2017.
  */
@@ -73,6 +77,8 @@ public class HelpingMethods {
 
     // Network Check
     public static boolean haveNetworkConnection(Context context) {
+        if(mocked) return true;
+
         boolean haveConnectedWifi = false;
         boolean haveConnectedMobile = false;
 
@@ -88,4 +94,33 @@ public class HelpingMethods {
         }
         return haveConnectedWifi || haveConnectedMobile;
     }
+
+    //public String makeHTTPCallForArray(String callURL)
+    public String makeHTTPCallForArray(String callURL) throws IOException { return makeHTTPCall(callURL); }
+
+    public String makeHTTPCallForObject(String callURL) throws IOException { return makeHTTPCall(callURL); }
+
+    // using OKHTTP
+    private String makeHTTPCall(String callURL) throws IOException {
+
+        if(mocked) return "Mocked return";
+
+        String TAG = "Using OKHTTP";
+
+        Log.i(TAG, "Beginning Call on URL: " + callURL);
+
+        OkHttpClient client = new OkHttpClient();
+        Request.Builder builder = new Request.Builder();
+        builder.url(callURL);
+        Request request = builder.build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            return response.body().string();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

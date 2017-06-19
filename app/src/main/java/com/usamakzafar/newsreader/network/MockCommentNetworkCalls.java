@@ -12,6 +12,7 @@ import java.util.Random;
 /**
  * Created by usamazafar on 04/06/2017.
  */
+/*
 
 class MockCommentNetworkCalls extends CommentsNetworkCalls {
 
@@ -34,3 +35,4 @@ class MockCommentNetworkCalls extends CommentsNetworkCalls {
         return true;
     }
 }
+*/

@@ -35,7 +35,7 @@ public class NewsStoryUnitTesting {
     @Before
     public void setUp(){
         tester= new NewsStoryTester();
-        NetworkHandler.isMocked = true;
+        //NetworkHandler.isMocked = true;
         MockitoAnnotations.initMocks(this);
     }
 

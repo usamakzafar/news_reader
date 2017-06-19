@@ -6,10 +6,14 @@ import android.text.format.DateUtils;
 import com.usamakzafar.newsreader.utils.HelpingMethods;
 import com.usamakzafar.newsreader.utils.ParseJSON;
 
+import org.json.JSONException;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.xml.sax.helpers.ParserAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,10 +61,23 @@ public class HelpingMethodsTest {
 
     }
 
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
     @Test
-    public void test_c_method_parseDate() throws Exception{
+    public void test_c_checkNewsStoryJSONException() throws Exception{
 
+        exception.expect(JSONException.class);
 
+        ParseJSON.parseNewsStory("this is not json");
+    }
+
+    @Test
+    public void test_c_checkCommentJSONException() throws Exception{
+
+        exception.expect(JSONException.class);
+
+        ParseJSON.parseComments("this is not json");
     }
 
 }

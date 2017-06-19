@@ -10,6 +10,7 @@ import com.usamakzafar.newsreader.models.Comment;
 import com.usamakzafar.newsreader.utils.HelpingMethods;
 import com.usamakzafar.newsreader.utils.ParseJSON;
 
+import org.json.JSONException;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class CommentsTester {
     private CommentsAdapter adapter;
     private MockContext context = new MockContext();
 
-    public void testIfCommentIsParsingCorrectly(){
+    public void testIfCommentIsParsingCorrectly() throws JSONException {
 
         String commentJson= "{\"by\":\"wallnuss\",\"id\":14467718" +
                 ",\"kids\":[14467781,14468256,14470479,14469443,14470448]" +

@@ -33,13 +33,21 @@ public class CommentsNetworkCalls {
     private CommentsUpdatedListener listener;
     private commentsFetcher fetcher;
 
-    private HTTPCallMethod httpCall;
+    public HelpingMethods getHttpCall() {
+        return httpCall;
+    }
+
+    public void setHttpCall(HelpingMethods httpCall) {
+        this.httpCall = httpCall;
+    }
+
+    private HelpingMethods httpCall;
 
     public CommentsNetworkCalls(Context c, CommentsUpdatedListener commentsUpdatedListener){
         context = c;
         listener = commentsUpdatedListener;
 
-        httpCall = new HTTPCallMethod();
+        httpCall = new HelpingMethods();
 
     }
 
@@ -83,7 +91,7 @@ public class CommentsNetworkCalls {
                         String callURL = HelpingMethods.compileURLforFetchingItems(context, commentID);
 
                         // Step 2: Execute the HTTP Request on URL and store response in String Result
-                        String result = httpCall.makeHTTPCall(callURL);
+                        String result = httpCall.makeHTTPCallForObject(callURL);
 
                         // Step 3: Parse & Return the resulting Comment from the Result String
                         Comment comment = ParseJSON.parseComments(result);
@@ -102,9 +110,7 @@ public class CommentsNetworkCalls {
 
                         }
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
+                    } catch (IOException | JSONException e) {
                         e.printStackTrace();
                     }
                 }

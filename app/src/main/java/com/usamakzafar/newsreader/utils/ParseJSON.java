@@ -35,12 +35,11 @@ public class ParseJSON {
 
 
     //Method to format the received json string into a NewsStory Object
-    public static NewsStory parseNewsStory(String s){
+    public static NewsStory parseNewsStory(String s) throws JSONException {
 
         //Create a new NewsStory using the elements of the JSON object
         NewsStory story = new NewsStory();
 
-        try {
 
             //Try to create a new JSON Object from that String
             JSONObject object = new JSONObject(s);
@@ -68,64 +67,46 @@ public class ParseJSON {
             //Return the NewsStory object
             return story;
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-        return null;
-
-
     }
 
 
     // Method to format the received json string into a Comment Object
-    public static Comment parseComments(String s){
+    public static Comment parseComments(String s) throws JSONException {
         //Pass in the JSON Object as a String
 
-        try {
-            // Try to create a new JSON Object from that String
-            JSONObject object = new JSONObject(s);
+        // Try to create a new JSON Object from that String
+        JSONObject object = new JSONObject(s);
 
-            // Check to see if the comment was deleted
-            if (!commentWasDeleted(object)) {
+        // Check to see if the comment was deleted
+        if (!commentWasDeleted(object)) {
 
-                //If successful, create a new Comment using the elements of the JSON object
-                Comment comment = new Comment();
+            //If successful, create a new Comment using the elements of the JSON object
+            Comment comment = new Comment();
 
-                //Parse Integers
-                comment.setId(parseInt(object, KEY_ID));
-                comment.setParentID(parseInt(object, KEY_PARENT));
+            //Parse Integers
+            comment.setId(parseInt(object, KEY_ID));
+            comment.setParentID(parseInt(object, KEY_PARENT));
 
-                //Parse Strings
-                comment.setAuthor(parseString(object, KEY_AUTHOR));
-                comment.setType(parseString(object, KEY_TYPE));
+            //Parse Strings
+            comment.setAuthor(parseString(object, KEY_AUTHOR));
+            comment.setType(parseString(object, KEY_TYPE));
 
-                // Comment Text is in HTML and Needs to be converted
-                String html = parseString(object, KEY_COMMENT_TEXT);
-                String text = HelpingMethods.HTMLtoText(html);
-                comment.setText(text);
+            // Comment Text is in HTML and Needs to be converted
+            String html = parseString(object, KEY_COMMENT_TEXT);
+            String text = HelpingMethods.HTMLtoText(html);
+            comment.setText(text);
 
-                comment.setKids(parseKids(object));
+            comment.setKids(parseKids(object));
 
-                //Parse the time
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(object.getLong(KEY_TIME) * 1000L);
-                comment.setTime(calendar);
+            //Parse the time
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(object.getLong(KEY_TIME) * 1000L);
+            comment.setTime(calendar);
 
-                //Return the object
-                return comment;
-            }
-            return null;
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+            //Return the object
+            return comment;
         }
-
-
         return null;
-
-
     }
 
 
@@ -142,28 +123,16 @@ public class ParseJSON {
     // Private Method to extract
     //          String
     // from a JSON Object and Handle Error
-    private static String parseString(JSONObject object, String key){
-        String res = "";
-        try {
-            res = object.getString(key);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return res;
+    private static String parseString(JSONObject object, String key) throws JSONException {
+        return object.getString(key);
     }
 
 
     // Private Method to extract
     //      Integer
     // from an Object and Handle Error
-    private static int parseInt(JSONObject object, String key){
-        int i = 0;
-        try {
-            i = object.getInt(key);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return i;
+    private static int parseInt(JSONObject object, String key) throws JSONException {
+        return object.getInt(key);
     }
 
 
@@ -174,9 +143,7 @@ public class ParseJSON {
         JSONArray array = new JSONArray();
         try {
             array = object.getJSONArray(KEY_KIDS);
-        } catch (JSONException e) {
-            Log.i(TAG, "Object has no further kids");
-        }
+        }catch (Exception e){e.printStackTrace();}
         return array;
     }
 
