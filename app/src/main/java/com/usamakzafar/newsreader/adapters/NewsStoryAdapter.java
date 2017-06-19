@@ -44,7 +44,10 @@ public class NewsStoryAdapter extends RecyclerView.Adapter<NewsStoryViewHolder> 
     public void onBindViewHolder(NewsStoryViewHolder holder, int position) {
         try {
             NewsStory story = newsStories.get(position);
-            holder.setNewsStoryToView(story,position);
+
+            holder.setNewsStoryToView(story);
+
+            holder.setAnimation(position);
         }catch (Exception e) {e.printStackTrace();}
     }
 

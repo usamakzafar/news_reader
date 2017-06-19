@@ -37,7 +37,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsViewHolder> {
     public void onBindViewHolder(CommentsViewHolder holder, int position) {
         try {
             Comment comment = comments.get(position);
-            holder.addCommentToView(comment,position);
+
+            holder.addCommentToView(comment);
+
+            holder.setAnimation(position);
 
         }catch (Exception e) {e.printStackTrace();}
     }

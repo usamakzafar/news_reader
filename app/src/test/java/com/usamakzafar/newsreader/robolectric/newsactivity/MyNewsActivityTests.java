@@ -3,6 +3,7 @@ package com.usamakzafar.newsreader.robolectric.newsactivity;
 import com.usamakzafar.newsreader.BuildConfig;
 import com.usamakzafar.newsreader.NewsActivity;
 
+import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,7 +54,6 @@ public class MyNewsActivityTests {
 
     @Test
     public void checkIfViewsLoadedCorrectly(){
-        tester.checkOnCreate();
         tester.checkTitleBar();
         tester.checkSwipeRefreshLayout();
     }
@@ -77,5 +77,11 @@ public class MyNewsActivityTests {
         tester.checkIfNewsStoriesAreLoaded();
         tester.checkIfMoreNewsStoriesAreLoading();
         tester.checkIfClickingStartsNewActivity();
+    }
+
+
+    @Test
+    public void testNewsStoryViewHolder() throws JSONException {
+        tester.testNewsStoryViewHolder();
     }
 }

@@ -86,10 +86,6 @@ public class NewsActivity extends AppCompatActivity
         return handler;
     }
 
-    public void setHandler(NetworkHandler handler) {
-        this.handler = handler;
-    }
-
     public void initActivity() {
 
         //to Bypass loading again in case orientation of the device has changed

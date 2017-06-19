@@ -5,14 +5,22 @@ import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import com.usamakzafar.newsreader.CommentsActivity;
 import com.usamakzafar.newsreader.NewsActivity;
 import com.usamakzafar.newsreader.R;
+import com.usamakzafar.newsreader.adapters.CommentsViewHolder;
+import com.usamakzafar.newsreader.adapters.NewsStoryViewHolder;
+import com.usamakzafar.newsreader.models.Comment;
 import com.usamakzafar.newsreader.models.NewsStory;
 import com.usamakzafar.newsreader.network.NetworkHandler;
 import com.usamakzafar.newsreader.network.NewsStoryNetworkCalls;
 import com.usamakzafar.newsreader.utils.HelpingMethods;
+import com.usamakzafar.newsreader.utils.ParseJSON;
+
+import junit.framework.Assert;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,71 +78,6 @@ public class NewsActivityUnitTester {
         recyclerView = (RecyclerView) activity.findViewById(R.id.recyclerview);
     }
 
-
-    // Setup Methods
-    public void setUpMockNetworkCall2() {
-        final NewsStoryNetworkCalls mockCall = mock(NewsStoryNetworkCalls.class);
-
-        assertNotNull(activity.getHandler());
-
-        NetworkHandler spyHandler = spy(activity.getHandler());
-
-        when(spyHandler.getNewsStory(any(Context.class),any(NewsStoryNetworkCalls.NewsStoriesUpdatedListener.class)))
-                .thenReturn(mockCall);
-
-        doAnswer(new Answer<NewsStoryNetworkCalls>() {
-            @Override
-            public NewsStoryNetworkCalls answer(InvocationOnMock invocation) throws Throwable {
-                Object[] objects = invocation.getArguments();
-                listener = (NewsStoryNetworkCalls.NewsStoriesUpdatedListener) objects[1];
-                return mockCall;
-            }
-        }).when(spyHandler).getNewsStory(any(Context.class),any(NewsStoryNetworkCalls.NewsStoriesUpdatedListener.class));
-
-        doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                assertNotNull(listener);
-                listener.onProgressUpdated(getDummyNewsList());
-                listener.afterFetchingNewsStories(40,false,null);
-                return null;
-            }
-        }).when(mockCall).execute(anyInt(),any(List.class));
-
-        activity.setHandler(spyHandler);
-
-    }
-
-    private List<NewsStory> getDummyNewsList() {
-        for(int i=1;i<=20;i++){
-
-            //Dummy news stories for testing
-            NewsStory n = new NewsStory();
-
-            n.setAuthor("author " + i);
-            n.setTitle("Title " + i);
-            n.setId(i);
-            n.setDescendants(5);
-            n.setScore(i);
-            n.setTime(Calendar.getInstance());
-            n.setType("story");
-            try {
-                n.setKids(new JSONArray("[ 14482423, 14482678, 14482612, 14482519, 14482510, 14482576, 14482307, 14482483, 14482594, 14482614 ]"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            n.setUrl("");
-
-            mockNewsStories.add(n);
-        }
-        return mockNewsStories;
-    }
-
-
-    public void checkOnCreate() {
-
-    }
-
     public void checkInitActivity() {
         activity.initActivity();
         assertNotNull(activity);
@@ -190,6 +133,41 @@ public class NewsActivityUnitTester {
         recyclerView.getChildAt(0).performClick();
 
         Intent expectedIntent = new Intent(activity, CommentsActivity.class);
-        //assertThat(shadowOf(activity).getNextStartedActivity()).isEqualTo(expectedIntent);
+        expectedIntent.putExtra("title","NSA OSS Technologies");
+        expectedIntent.putExtra("kids","[14584672,14584821,14584353,14584391,14584423,14584705,14585073,14584458,14584979,14584813,14584655,14584426,14584792,14584680,14584875,14585400]");
+      //  assertThat(shadowOf(activity).getNextStartedActivity()).isEqualTo(expectedIntent);
+    }
+
+
+    public void testNewsStoryViewHolder() throws JSONException {
+
+        View itemView = LayoutInflater.from(activity)
+                .inflate(R.layout.news_list_item_fancy, null, false);
+        NewsStoryViewHolder holder = new NewsStoryViewHolder(activity, itemView);
+
+        NewsStory newsStory = getDummyNewsStory();
+
+        holder.setNewsStoryToView(newsStory);
+
+        Assert.assertNotNull(holder);
+
+        Assert.assertNotNull(holder.getAuthor());
+        Assert.assertEquals("andrewke",holder.getAuthor().getText().toString());
+
+        Assert.assertNotNull(holder.getScore());
+        Assert.assertEquals("219",holder.getScore().getText().toString());
+
+        Assert.assertNotNull(holder.getTitle());
+        Assert.assertEquals("NSA OSS Technologies",holder.getTitle().getText().toString());
+
+        Assert.assertNotNull(holder.getComments());
+        Assert.assertEquals("33",holder.getComments().getText().toString());
+
+    }
+
+
+
+    public NewsStory getDummyNewsStory() throws JSONException {
+        return ParseJSON.parseNewsStory("{\"by\":\"andrewke\",\"descendants\":33,\"id\":14584042,\"kids\":[14584672,14584821,14584353,14584391,14584423,14584705,14585073,14584458,14584979,14584813,14584655,14584426,14584792,14584680,14584875,14585400],\"score\":219,\"time\":1497835856,\"title\":\"NSA OSS Technologies\",\"type\":\"story\",\"url\":\"https://nationalsecurityagency.github.io\"}");
     }
 }

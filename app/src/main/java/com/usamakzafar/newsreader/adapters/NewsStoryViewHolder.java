@@ -21,6 +21,7 @@ import com.usamakzafar.newsreader.utils.HelpingMethods;
  */
 
 public class NewsStoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
     private TextView title,score,author, time,comments;
     private Context context;
     private NewsStory story;
@@ -44,7 +45,7 @@ public class NewsStoryViewHolder extends RecyclerView.ViewHolder implements View
         itemView.clearAnimation();
     }
 
-    public void setNewsStoryToView(NewsStory _story, int position) {
+    public void setNewsStoryToView(NewsStory _story) {
         this.story = _story;
 
         title.setText(story.getTitle());
@@ -58,18 +59,34 @@ public class NewsStoryViewHolder extends RecyclerView.ViewHolder implements View
                 1);
         time.setText(howLongAgo);
 
-        setAnimation(itemView, position);
-
     }
+
+
+    public TextView getTitle() {
+        return title;
+    }
+
+    public TextView getScore() {
+        return score;
+    }
+
+    public TextView getAuthor() {
+        return author;
+    }
+
+    public TextView getComments() {
+        return comments;
+    }
+
     //Animations . Just for fun! :)
     private int lastPosition = -1;
 
-    private void setAnimation(View viewToAnimate, int position)   {
+    public void setAnimation(int position)   {
         // If the bound view wasn't previously displayed on screen, it's animated
         if (position > lastPosition)
         {
             Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
-            viewToAnimate.startAnimation(animation);
+            itemView.startAnimation(animation);
             lastPosition = position;
         }
     }

@@ -50,15 +50,11 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder implements View.
         return author;
     }
 
-    public TextView getTime() {
-        return time;
-    }
-
     public TextView getReplies() {
         return replies;
     }
 
-    public void addCommentToView(Comment _comment, int position){
+    public void addCommentToView(Comment _comment){
 
         this.comment = _comment;
         // Populate the view
@@ -81,19 +77,20 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder implements View.
         }
         space.setText(spaceString);
 
-        setAnimation(this.itemView, position);
 
+        //setAnimation(this.itemView, position);
     }
 
     //Animations . Just for fun! :)
     private int lastPosition = -1;
 
-    private void setAnimation(View viewToAnimate, int position)   {
+    //public void setAnimation(View viewToAnimate, int position)   {
+    public void setAnimation(int position)   {
         // If the bound view wasn't previously displayed on screen, it's animated
         if (position > lastPosition)
         {
             Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
-            viewToAnimate.startAnimation(animation);
+            itemView.startAnimation(animation);
             lastPosition = position;
         }
     }

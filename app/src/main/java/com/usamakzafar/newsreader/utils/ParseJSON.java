@@ -123,16 +123,24 @@ public class ParseJSON {
     // Private Method to extract
     //          String
     // from a JSON Object and Handle Error
-    private static String parseString(JSONObject object, String key) throws JSONException {
-        return object.getString(key);
+    private static String parseString(JSONObject object, String key) {
+        try {
+            return object.getString(key);
+        }catch (Exception e) {e.printStackTrace();}
+        return "";
     }
 
 
     // Private Method to extract
     //      Integer
     // from an Object and Handle Error
-    private static int parseInt(JSONObject object, String key) throws JSONException {
-        return object.getInt(key);
+    private static int parseInt(JSONObject object, String key) {
+        try {
+            return object.getInt(key);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
 
