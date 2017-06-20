@@ -26,7 +26,7 @@ import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
-public class MyNewsActivityTests {
+public class NewsActivityUnitTests {
 
     private NewsActivityUnitTester tester;
 
@@ -84,4 +84,16 @@ public class MyNewsActivityTests {
     public void testNewsStoryViewHolder() throws JSONException {
         tester.testNewsStoryViewHolder();
     }
+
+
+    @Test
+    public void testMenuInflation() throws JSONException {
+        tester.testMenuInflation();
+    }
+
+    @Test
+    public void testErrorMessageShowing() throws JSONException {
+        tester.testNewsFetchingError();
+    }
+
 }

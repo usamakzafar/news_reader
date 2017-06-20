@@ -1,14 +1,20 @@
 package com.usamakzafar.newsreader.utils;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.usamakzafar.newsreader.R;
+import com.usamakzafar.newsreader.models.Comment;
 import com.usamakzafar.newsreader.network.NetworkHandler;
 
 import org.json.JSONArray;
@@ -123,4 +129,25 @@ public class HelpingMethods {
         return null;
     }
 
+    public static AlertDialog.Builder buildAlertForAbout(Context context) {
+        AlertDialog.Builder builder= new AlertDialog.Builder(context);
+        builder.setMessage(R.string.my_message);
+        builder.setPositiveButton("Okay",null);
+        return builder;
+    }
+
+    public static AlertDialog.Builder buildAlertForComment(Context context, Comment comment) {
+        //Open an Alert to show the full comment
+        AlertDialog.Builder commentDialog = new AlertDialog.Builder(context);
+
+        String howLongAgo = (String) DateUtils.getRelativeTimeSpanString(
+                comment.getTime().getTimeInMillis(),
+                System.currentTimeMillis(),
+                1);
+
+        commentDialog.setTitle( howLongAgo + " by " + comment.getAuthor());
+        commentDialog.setMessage(comment.getText());
+        commentDialog.setPositiveButton("Close",null);
+        return commentDialog;
+    }
 }

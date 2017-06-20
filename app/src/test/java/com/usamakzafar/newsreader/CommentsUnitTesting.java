@@ -39,4 +39,5 @@ public class CommentsUnitTesting {
         tester.checkVariablesReturningCorrectly();
         tester.checkIfAdapterIsWorkingCorrectly();
     }
+
 }

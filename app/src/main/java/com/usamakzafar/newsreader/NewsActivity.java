@@ -168,10 +168,7 @@ public class NewsActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_about:
-                AlertDialog.Builder builder= new AlertDialog.Builder(this);
-                builder.setMessage(R.string.my_message);
-                builder.setPositiveButton("Okay",null);
-                builder.show();
+                HelpingMethods.buildAlertForAbout(this).show();
                 break;
         }
         return super.onOptionsItemSelected(item);

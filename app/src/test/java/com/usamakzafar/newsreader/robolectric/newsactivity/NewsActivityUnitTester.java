@@ -1,12 +1,16 @@
 package com.usamakzafar.newsreader.robolectric.newsactivity;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import com.usamakzafar.newsreader.CommentsActivity;
 import com.usamakzafar.newsreader.NewsActivity;
@@ -26,6 +30,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.robolectric.Robolectric;
+import org.robolectric.fakes.RoboMenu;
+import org.robolectric.fakes.RoboMenuItem;
+import org.robolectric.shadows.ShadowActivity;
+import org.robolectric.shadows.ShadowToast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,6 +42,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -123,19 +133,21 @@ public class NewsActivityUnitTester {
     public void checkSwipeRefreshLayout() {
         SwipeRefreshLayout swipeRefreshLayout =  (SwipeRefreshLayout) activity.findViewById(R.id.swipe_refresh_layout);
         assertNotNull(swipeRefreshLayout);
+        activity.onRefresh();
     }
 
     public void checkIfClickingStartsNewActivity() {
+
+        ShadowActivity shadowActivity = shadowOf(activity);
 
         recyclerView = (RecyclerView) activity.findViewById(R.id.recyclerview);
         recyclerView.measure(0, 0);
         recyclerView.layout(0, 0, 100, 10000);
         recyclerView.getChildAt(0).performClick();
 
-        Intent expectedIntent = new Intent(activity, CommentsActivity.class);
-        expectedIntent.putExtra("title","NSA OSS Technologies");
-        expectedIntent.putExtra("kids","[14584672,14584821,14584353,14584391,14584423,14584705,14585073,14584458,14584979,14584813,14584655,14584426,14584792,14584680,14584875,14585400]");
-      //  assertThat(shadowOf(activity).getNextStartedActivity()).isEqualTo(expectedIntent);
+        Intent intent = shadowActivity.peekNextStartedActivityForResult().intent;
+        assertThat(intent.getComponent()).isEqualTo(new ComponentName(activity, CommentsActivity.class));
+
     }
 
 
@@ -165,9 +177,19 @@ public class NewsActivityUnitTester {
 
     }
 
-
-
     public NewsStory getDummyNewsStory() throws JSONException {
         return ParseJSON.parseNewsStory("{\"by\":\"andrewke\",\"descendants\":33,\"id\":14584042,\"kids\":[14584672,14584821,14584353,14584391,14584423,14584705,14585073,14584458,14584979,14584813,14584655,14584426,14584792,14584680,14584875,14585400],\"score\":219,\"time\":1497835856,\"title\":\"NSA OSS Technologies\",\"type\":\"story\",\"url\":\"https://nationalsecurityagency.github.io\"}");
+    }
+
+    public void testMenuInflation() {
+        Menu menu = new RoboMenu();
+        activity.onCreateOptionsMenu(menu);
+
+        assertNotNull(menu.findItem(R.id.menu_about));
+    }
+
+    public void testNewsFetchingError() {
+        activity.afterFetchingNewsStories(20,true,"Error message");
+        assertEquals( "Error message", ShadowToast.getTextOfLatestToast());
     }
 }

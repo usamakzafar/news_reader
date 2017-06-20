@@ -121,11 +121,10 @@ public class CommentsActivity extends AppCompatActivity implements CommentsNetwo
 
 
     // Getting IDs in JSON Array Format from string
-    private void loadCommentIDs(String kids) {
+    public void loadCommentIDs(String kids) {
         try {
             commentIDs = new JSONArray(kids);
         } catch (JSONException e) {
-            e.printStackTrace();
             HelpingMethods.showMessage(this, getString(R.string.comment_ids_error));
         }
     }
@@ -158,36 +157,11 @@ public class CommentsActivity extends AppCompatActivity implements CommentsNetwo
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.reply_level:
-                // Alert Dialog to configure reply level setting
-                AlertDialog.Builder settings= new AlertDialog.Builder(this);
-
-                settings.setTitle("Choose Reply Level");
-
-                LayoutInflater inflater = this.getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.settings_reply_level, null);
-                settings.setView(dialogView);
-
-                final EditText num = (EditText) dialogView.findViewById(R.id.level_number);
-                num.setText(String.valueOf(maxLevel));
-
-                settings.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        int entered = Integer.valueOf(num.getText().toString());
-                        if (entered == 0 || entered >= 20) entered = 20;
-                        maxLevel = entered;
-                        preferences.edit().putInt(KEY_MAXLEVEL,maxLevel).apply();
-                        initActivity();
-                    }
-                });
+                AlertDialog.Builder settings = buildAlertForSettingReplyLevel();
                 settings.show();
                 break;
-
             case R.id.menu_about:
-                AlertDialog.Builder builder= new AlertDialog.Builder(this);
-                builder.setMessage(R.string.my_message);
-                builder.setPositiveButton("Okay",null);
-                builder.show();
+                HelpingMethods.buildAlertForAbout(this).show();
                 break;
 
             case android.R.id.home:
@@ -195,6 +169,32 @@ public class CommentsActivity extends AppCompatActivity implements CommentsNetwo
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public AlertDialog.Builder buildAlertForSettingReplyLevel() {
+        // Alert Dialog to configure reply level setting
+        AlertDialog.Builder settings= new AlertDialog.Builder(this);
+
+        settings.setTitle("Choose Reply Level");
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.settings_reply_level, null);
+        settings.setView(dialogView);
+
+        final EditText num = (EditText) dialogView.findViewById(R.id.level_number);
+        num.setText(String.valueOf(maxLevel));
+
+        settings.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                int entered = Integer.valueOf(num.getText().toString());
+                if (entered == 0 || entered >= 20) entered = 20;
+                maxLevel = entered;
+                preferences.edit().putInt(KEY_MAXLEVEL,maxLevel).apply();
+                initActivity();
+            }
+        });
+        return settings;
     }
 
     public String getCommentsActivityTitle(String title) {

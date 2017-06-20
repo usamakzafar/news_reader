@@ -99,16 +99,6 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder implements View.
     @Override
     public void onClick(View v) {
         //Open an Alert to show the full comment
-        AlertDialog.Builder commentDialog = new AlertDialog.Builder(context);
-
-        String howLongAgo = (String) DateUtils.getRelativeTimeSpanString(
-                comment.getTime().getTimeInMillis(),
-                System.currentTimeMillis(),
-                1);
-
-        commentDialog.setTitle( howLongAgo + " by " + comment.getAuthor());
-        commentDialog.setMessage(comment.getText());
-        commentDialog.setPositiveButton("Close",null);
-        commentDialog.show();
+        HelpingMethods.buildAlertForComment(context,comment).show();
     }
 }

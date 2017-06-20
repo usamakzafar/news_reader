@@ -1,6 +1,7 @@
 package com.usamakzafar.newsreader;
 
 import android.test.mock.MockContext;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 

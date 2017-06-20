@@ -1,16 +1,9 @@
 package com.usamakzafar.newsreader.robolectric.comments_activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.view.LayoutInflater;
-import android.view.View;
 
 import com.usamakzafar.newsreader.BuildConfig;
 import com.usamakzafar.newsreader.CommentsActivity;
-import com.usamakzafar.newsreader.R;
-import com.usamakzafar.newsreader.adapters.CommentsViewHolder;
-import com.usamakzafar.newsreader.models.Comment;
-import com.usamakzafar.newsreader.utils.ParseJSON;
 
 import org.json.JSONException;
 import org.junit.Before;
@@ -67,8 +60,37 @@ public class CommentsActivityUnitTests {
 
 
     @Test
-    public void testCommentsViewHolder() throws Exception {
+    public void test_CommentsViewHolder() throws Exception {
         tester.testCommentsViewHolder();
+        tester.checkIfAdapterIsWorkingCorrectly();
+    }
+
+    @Test
+    public void test_CommentClick() throws JSONException {
+        tester.testOnClickItem();
+        tester.testCommentAlert();
+    }
+
+    @Test
+    public void test_AlertDialogs() {
+        tester.checkRepliesDialog();
+        tester.checkAboutDialog();
+    }
+
+    @Test
+    public void test_BackButton() {
+        tester.testBackButton();
+    }
+
+
+    @Test
+    public void testMenuInflation() throws JSONException {
+        tester.testMenuInflation();
+    }
+
+    @Test
+    public void testErrorMessageShowing() throws JSONException {
+        tester.testCommentLoadingError();
     }
 
 }

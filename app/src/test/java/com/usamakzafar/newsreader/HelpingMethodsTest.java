@@ -18,6 +18,7 @@ import org.xml.sax.helpers.ParserAdapter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
@@ -79,5 +80,11 @@ public class HelpingMethodsTest {
 
         ParseJSON.parseComments("this is not json");
     }
+
+    @Test
+    public void test_d_checkHTMLparsing() throws Exception{
+        assertNull(HelpingMethods.readNewsIDsFromString(null));
+    }
+
 
 }
